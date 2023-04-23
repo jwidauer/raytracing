@@ -2,6 +2,7 @@ use crate::{
     aabb::AABB,
     materials::{BoxedMaterial, Material},
     ray::Ray,
+    time::Time,
     vec3::{Point3, Vec3},
 };
 
@@ -30,28 +31,38 @@ impl<'a> Sphere<'a> {
     pub fn new_moving(
         center0: Point3,
         center1: Point3,
-        time0: f64,
-        time1: f64,
+        timeframe: Time,
         radius: f64,
         material: impl Material + 'a + Send + Sync,
     ) -> Self {
-        Self::new_moving_boxed(center0, center1, time0, time1, radius, Box::new(material))
+        Self::new_moving_boxed(center0, center1, timeframe, radius, Box::new(material))
     }
 
     pub fn new_moving_boxed(
         center0: Point3,
         center1: Point3,
-        time0: f64,
-        time1: f64,
+        timeframe: Time,
         radius: f64,
         material: BoxedMaterial<'a>,
     ) -> Self {
-        let movement = Ray::new(center0, (center1 - center0) / (time1 - time0));
+        let movement = Ray::new(
+            center0,
+            (center1 - center0) / (timeframe.end - timeframe.start),
+        );
         Self {
             movement,
             radius,
             material,
         }
+    }
+
+    // Compute the UV coordinates of a point on the surface of a unit sphere.
+    pub fn sphere_uv(p: &Vec3) -> (f64, f64) {
+        const PI: f64 = std::f64::consts::PI;
+
+        let theta = (-p.y()).acos();
+        let phi = (-p.z()).atan2(p.x()) + PI;
+        (phi / (2.0 * PI), theta / PI)
     }
 }
 
@@ -73,12 +84,15 @@ impl Object for Sphere<'_> {
             let p = ray.at(root);
             let normal = (p - self.movement.at(ray.time())) / self.radius;
             let (normal, front_face) = HitRecord::orient_towards_ray(ray, normal);
+            let (u, v) = Self::sphere_uv(&normal);
             Some(HitRecord {
                 point: p,
                 normal,
                 t: root,
                 front_face,
                 material: self.material.as_ref(),
+                u,
+                v,
             })
         };
 
@@ -95,10 +109,10 @@ impl Object for Sphere<'_> {
         None
     }
 
-    fn bounding_box(&self, time0: f64, time1: f64) -> Option<crate::aabb::AABB> {
+    fn bounding_box(&self, timeframe: Time) -> Option<crate::aabb::AABB> {
         Some(AABB::new(
-            self.movement.at(time0) - Vec3::new(self.radius, self.radius, self.radius),
-            self.movement.at(time1) + Vec3::new(self.radius, self.radius, self.radius),
+            self.movement.at(timeframe.start) - Vec3::new(self.radius, self.radius, self.radius),
+            self.movement.at(timeframe.end) + Vec3::new(self.radius, self.radius, self.radius),
         ))
     }
 }

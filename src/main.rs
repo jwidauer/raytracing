@@ -4,8 +4,9 @@ use rayon::prelude::*;
 
 use color::Color;
 use ray::Ray;
+use scenes::{Scene, SceneType};
 
-use crate::{camera::Camera, image::Image, vec3::Point3};
+use crate::{camera::Camera, image::Image, time::Time, vec3::Point3};
 
 mod aabb;
 mod camera;
@@ -16,7 +17,55 @@ mod objects;
 mod rand_ext;
 mod ray;
 mod scenes;
+mod textures;
+mod time;
 mod vec3;
+
+fn setup_scene(aspect_ratio: f64, scene_type: SceneType, time: Time) -> (Scene<'static>, Camera) {
+    let world = Scene::new(scene_type, time);
+
+    // Camera
+    let cam_pos;
+    let look_at;
+    let vfov;
+    let aperture;
+
+    match scene_type {
+        SceneType::TwoSpheres => {
+            cam_pos = Point3::new(13.0, 2.0, 3.0);
+            look_at = Point3::new(0.0, 0.0, 0.0);
+            vfov = 20.0;
+            aperture = 0.0;
+        }
+        SceneType::ThreeSpheres => {
+            cam_pos = Point3::new(13.0, 2.0, 3.0);
+            look_at = Point3::new(0.0, 0.0, 0.0);
+            vfov = 20.0;
+            aperture = 0.0;
+        }
+        SceneType::BookCover => {
+            cam_pos = Point3::new(13.0, 2.0, 3.0);
+            look_at = Point3::new(0.0, 0.0, 0.0);
+            vfov = 20.0;
+            aperture = 0.1;
+        }
+    }
+
+    let vup = Point3::new(0.0, 1.0, 0.0);
+    let focus_dist = 10.0;
+
+    let camera = Camera::new(
+        Ray::new(cam_pos, cam_pos - look_at),
+        vup,
+        vfov,
+        aspect_ratio,
+        aperture,
+        focus_dist,
+        time,
+    );
+
+    (world, camera)
+}
 
 fn main() -> Result<()> {
     // Image
@@ -28,29 +77,9 @@ fn main() -> Result<()> {
     let samples_per_pixel = 100;
     let max_depth = 50;
 
-    // World
-    let world = scenes::Scene::new(scenes::SceneType::BookCover);
+    let timeframe = Time::from_exposure(1.0);
 
-    // Camera
-    let cam_pos = Point3::new(13.0, 2.0, 3.0);
-    let look_at = Point3::new(0.0, 0.0, 0.0);
-    let cam_dir = cam_pos - look_at;
-
-    let vup = Point3::new(0.0, 1.0, 0.0);
-
-    let focus_dist = 10.0;
-    let aperture = 0.1;
-
-    let camera = Camera::new(
-        Ray::new(cam_pos, cam_dir),
-        vup,
-        20.0,
-        aspect_ratio,
-        aperture,
-        focus_dist,
-        0.,
-        1.,
-    );
+    let (world, camera) = setup_scene(aspect_ratio, SceneType::TwoSpheres, timeframe);
 
     // Set up progress bar
     let progress = ProgressBar::new((image.height * image.width) as u64).with_style(
@@ -85,7 +114,6 @@ fn main() -> Result<()> {
             *pixel = pixel_color / samples_per_pixel as f64;
 
             progress.inc(1);
-            coz::progress!()
         });
 
     image.write_ppm("img.ppm")?;

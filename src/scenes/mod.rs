@@ -1,30 +1,32 @@
 mod book_cover;
 mod three_spheres;
+mod two_spheres;
 
-use crate::{
-    color::Color,
-    objects::{Object, ObjectList},
-    ray::Ray,
-};
+use crate::{color::Color, objects::BoxedObject, ray::Ray, time::Time};
 
 pub struct Scene<'a> {
-    objects: ObjectList<'a>,
+    objects: BoxedObject<'a>,
 }
 
 #[allow(dead_code)]
+#[derive(Clone, Copy)]
 pub enum SceneType {
+    TwoSpheres,
     ThreeSpheres,
     BookCover,
 }
 
 impl Scene<'_> {
-    pub fn new(scene_type: SceneType) -> Self {
+    pub fn new(scene_type: SceneType, time: Time) -> Self {
         match scene_type {
+            SceneType::TwoSpheres => Self {
+                objects: Box::new(two_spheres::new(time)),
+            },
             SceneType::ThreeSpheres => Self {
-                objects: three_spheres::new(),
+                objects: Box::new(three_spheres::new(time)),
             },
             SceneType::BookCover => Self {
-                objects: book_cover::new(),
+                objects: Box::new(book_cover::new(time)),
             },
         }
     }

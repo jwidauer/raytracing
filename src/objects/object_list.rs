@@ -1,4 +1,4 @@
-use crate::{aabb::AABB, ray::Ray};
+use crate::{aabb::AABB, ray::Ray, time::Time};
 
 use super::{BoxedObject, HitRecord, Object};
 
@@ -36,7 +36,7 @@ impl Object for ObjectList<'_> {
         hit_record
     }
 
-    fn bounding_box(&self, time0: f64, time1: f64) -> Option<crate::aabb::AABB> {
+    fn bounding_box(&self, timeframe: Time) -> Option<crate::aabb::AABB> {
         if self.objects.is_empty() {
             return None;
         }
@@ -44,7 +44,7 @@ impl Object for ObjectList<'_> {
         let mut output_box: Option<AABB> = None;
 
         for object in &self.objects {
-            if let Some(tmp_box) = object.bounding_box(time0, time1) {
+            if let Some(tmp_box) = object.bounding_box(timeframe) {
                 output_box = match output_box {
                     Some(output_box) => Some(AABB::surrounding_box(&output_box, &tmp_box)),
                     None => Some(tmp_box),

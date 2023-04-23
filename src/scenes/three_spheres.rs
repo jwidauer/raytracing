@@ -1,11 +1,12 @@
 use crate::{
     color::Color,
     materials::{Dielectric, Lambertian, Metal},
-    objects::{ObjectList, Sphere},
+    objects::{Object, ObjectList, Sphere},
+    time::Time,
     vec3::Point3,
 };
 
-pub fn new() -> ObjectList<'static> {
+pub fn new(_time: Time) -> impl Object {
     let ground_material = Lambertian::new(Color::new(0.8, 0.8, 0.0));
     let center_material = Lambertian::new(Color::new(0.7, 0.3, 0.3));
     let left_material = Dielectric::new(1.5);

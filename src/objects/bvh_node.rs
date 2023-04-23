@@ -1,18 +1,18 @@
 use std::cmp::Ordering;
 
-use crate::aabb::AABB;
+use crate::{aabb::AABB, time::Time};
 
 use super::{BoxedObject, Object, ObjectList};
 
 #[derive(Clone)]
-struct BvhNode<'a> {
+pub struct BvhNode<'a> {
     left: BoxedObject<'a>,
     right: BoxedObject<'a>,
     bounding_box: AABB,
 }
 
 impl<'a> BvhNode<'a> {
-    pub fn new(objects: &[BoxedObject<'a>], time0: f64, time1: f64) -> Self {
+    pub fn new(objects: &[BoxedObject<'a>], timeframe: Time) -> Self {
         let axis: usize = (3.0 * rand::random::<f64>()) as usize;
         let comparator = |a: &_, b: &_| BvhNode::compare_along_axis(a, b, axis);
 
@@ -39,12 +39,12 @@ impl<'a> BvhNode<'a> {
             objects.sort_by(comparator);
 
             let mid = objects.len() / 2;
-            left = Box::new(BvhNode::new(&objects[..mid], time0, time1));
-            right = Box::new(BvhNode::new(&objects[mid..], time0, time1));
+            left = Box::new(BvhNode::new(&objects[..mid], timeframe));
+            right = Box::new(BvhNode::new(&objects[mid..], timeframe));
         }
 
-        let box_left = left.bounding_box(time0, time1).unwrap();
-        let box_right = right.bounding_box(time0, time1).unwrap();
+        let box_left = left.bounding_box(timeframe).unwrap();
+        let box_right = right.bounding_box(timeframe).unwrap();
 
         Self {
             left,
@@ -53,8 +53,8 @@ impl<'a> BvhNode<'a> {
         }
     }
 
-    pub fn from_list(list: &ObjectList<'a>, time0: f64, time1: f64) -> Self {
-        Self::new(&list.objects(), time0, time1)
+    pub fn from_list(list: &ObjectList<'a>, timeframe: Time) -> Self {
+        Self::new(&list.objects(), timeframe)
     }
 
     fn compare_along_axis<'b>(a: &BoxedObject<'b>, b: &BoxedObject<'b>, axis: usize) -> Ordering {
@@ -62,8 +62,8 @@ impl<'a> BvhNode<'a> {
             panic!("Invalid axis");
         }
 
-        let box_a = a.bounding_box(0.0, 0.0).unwrap();
-        let box_b = b.bounding_box(0.0, 0.0).unwrap();
+        let box_a = a.bounding_box(Time::new(0., 0.)).unwrap();
+        let box_b = b.bounding_box(Time::new(0., 0.)).unwrap();
 
         box_a.min()[axis].partial_cmp(&box_b.min()[axis]).unwrap()
     }
@@ -92,7 +92,7 @@ impl Object for BvhNode<'_> {
         }
     }
 
-    fn bounding_box(&self, _time0: f64, _time1: f64) -> Option<AABB> {
+    fn bounding_box(&self, _timeframe: Time) -> Option<AABB> {
         Some(self.bounding_box)
     }
 }
