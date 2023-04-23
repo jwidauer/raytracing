@@ -1,3 +1,3 @@
-# raytracing
+# Raytracing
 
-Project following the book series of [raytracing in a weekend](raytracing.github.io).
+Project following the book series of [raytracing in a weekend](https://raytracing.github.io).
