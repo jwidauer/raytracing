@@ -1,6 +1,7 @@
 mod book_cover;
 mod globe;
 mod perlin_spheres;
+mod simple_light;
 mod three_spheres;
 mod two_spheres;
 
@@ -8,6 +9,7 @@ use crate::{color::Color, objects::BoxedObject, ray::Ray, time::Time};
 
 pub struct Scene<'a> {
     objects: BoxedObject<'a>,
+    background: Color,
 }
 
 #[allow(dead_code)]
@@ -18,49 +20,51 @@ pub enum SceneType {
     BookCover,
     PerlinSpheres,
     Globe,
+    SimpleLight,
 }
 
 impl Scene<'_> {
-    pub fn new(scene_type: SceneType, time: Time) -> Self {
-        match scene_type {
-            SceneType::TwoSpheres => Self {
-                objects: Box::new(two_spheres::new(time)),
-            },
-            SceneType::ThreeSpheres => Self {
-                objects: Box::new(three_spheres::new(time)),
-            },
-            SceneType::BookCover => Self {
-                objects: Box::new(book_cover::new(time)),
-            },
-            SceneType::PerlinSpheres => Self {
-                objects: Box::new(perlin_spheres::new()),
-            },
-            SceneType::Globe => Self {
-                objects: Box::new(globe::new()),
-            },
+    pub fn new(scene_type: SceneType, time: Time, background: Color) -> Self {
+        let objects: BoxedObject = match scene_type {
+            SceneType::TwoSpheres => Box::new(two_spheres::new(time)),
+            SceneType::ThreeSpheres => Box::new(three_spheres::new(time)),
+            SceneType::BookCover => Box::new(book_cover::new(time)),
+            SceneType::PerlinSpheres => Box::new(perlin_spheres::new()),
+            SceneType::Globe => Box::new(globe::new()),
+            SceneType::SimpleLight => Box::new(simple_light::new()),
+        };
+
+        Self {
+            objects,
+            background,
         }
     }
 
-    pub fn ray_color(&self, r: &Ray, max_depth: usize) -> Color {
+    pub fn ray_color(&self, ray: &Ray, max_depth: usize) -> Color {
         let mut color = Color::new(1.0, 1.0, 1.0);
-        let mut r = r.clone();
+        let mut ray = ray.clone();
         for _ in 0..max_depth {
-            if let Some(rec) = self.objects.hit(&r, 0.001, f64::INFINITY) {
-                if let Some(scatter) = rec.material.scatter(&r, &rec) {
-                    color *= scatter.attenuation;
-                    r = scatter.scattered;
-                } else {
-                    return Color::new(0.0, 0.0, 0.0);
+            let hr = match self.objects.hit(&ray, 0.001, f64::INFINITY) {
+                Some(hr) => hr,
+                None => {
+                    // Background
+                    color *= self.background;
+                    break;
                 }
-            } else {
-                // Background
-                let unit_direction = r.direction().normalized();
-                let t = 0.5 * (unit_direction.y() + 1.0);
-                let background_color =
-                    Color::new(1.0, 1.0, 1.0) * (1.0 - t) + Color::new(0.5, 0.7, 1.0) * t;
+            };
 
-                color *= background_color;
-                break;
+            let emitted = hr.material.emitted(hr.u, hr.v, &hr.point);
+
+            match hr.material.scatter(&ray, &hr) {
+                Some(scatter) => {
+                    color = emitted + color * scatter.attenuation;
+                    ray = scatter.scattered;
+                }
+                None => {
+                    // Hit a light source or got absorbed
+                    color *= emitted;
+                    break;
+                }
             }
         }
 

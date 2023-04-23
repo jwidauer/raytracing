@@ -23,17 +23,21 @@ mod time;
 mod vec3;
 
 fn setup_scene(aspect_ratio: f64, scene_type: SceneType, time: Time) -> (Scene<'static>, Camera) {
-    let world = Scene::new(scene_type, time);
-
     // Camera
-    let cam_pos = Point3::new(13.0, 2.0, 3.0);
-    let look_at = Point3::new(0.0, 0.0, 0.0);
+    let mut cam_pos = Point3::new(13.0, 2.0, 3.0);
+    let mut look_at = Point3::new(0.0, 0.0, 0.0);
     let vfov = 20.0;
     let mut aperture = 0.0;
+    let mut background = Color::new(0.7, 0.8, 1.0);
 
     match scene_type {
         SceneType::BookCover => {
             aperture = 0.1;
+        }
+        SceneType::SimpleLight => {
+            cam_pos = Point3::new(0.0, 3.0, 26.0);
+            look_at = Point3::new(0.0, 2.0, 0.0);
+            background = Color::new(0.0, 0.0, 0.0);
         }
         _ => {}
     }
@@ -51,6 +55,8 @@ fn setup_scene(aspect_ratio: f64, scene_type: SceneType, time: Time) -> (Scene<'
         time,
     );
 
+    let world = Scene::new(scene_type, time, background);
+
     (world, camera)
 }
 
@@ -61,12 +67,12 @@ fn main() -> Result<()> {
     let width = (height as f64 * aspect_ratio) as usize;
     let mut image = Image::new(width, height);
 
-    let samples_per_pixel = 100;
+    let samples_per_pixel = 1000;
     let max_depth = 50;
 
     let timeframe = Time::from_exposure(1.0);
 
-    let (world, camera) = setup_scene(aspect_ratio, SceneType::Globe, timeframe);
+    let (world, camera) = setup_scene(aspect_ratio, SceneType::SimpleLight, timeframe);
 
     // Set up progress bar
     let progress = ProgressBar::new((image.height * image.width) as u64).with_style(

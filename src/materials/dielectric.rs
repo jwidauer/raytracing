@@ -4,12 +4,23 @@ use super::{Material, ScatterRecord};
 
 #[derive(Debug, Clone)]
 pub struct Dielectric {
+    attenuation: Color,
     refraction_index: f64,
 }
 
 impl Dielectric {
     pub fn new(refraction_index: f64) -> Self {
-        Self { refraction_index }
+        Self {
+            attenuation: Color::new(1.0, 1.0, 1.0),
+            refraction_index,
+        }
+    }
+
+    pub fn from_color(color: Color, refraction_index: f64) -> Self {
+        Self {
+            attenuation: color,
+            refraction_index,
+        }
     }
 
     fn reflectance(cosine: f64, refraction_index: f64) -> f64 {
@@ -45,7 +56,7 @@ impl Material for Dielectric {
         let scattered = Ray::new_time_based(rec.point, direction, ray.time());
 
         Some(ScatterRecord {
-            attenuation: Color::new(1.0, 1.0, 1.0),
+            attenuation: self.attenuation,
             scattered,
         })
     }
