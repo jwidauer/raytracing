@@ -1,18 +1,23 @@
-use crate::ray::Ray;
+use crate::{aabb::AABB, ray::Ray};
 
-use super::{HitRecord, Object};
+use super::{BoxedObject, HitRecord, Object};
 
+#[derive(Clone)]
 pub struct ObjectList<'a> {
-    objects: Vec<Box<dyn Object + 'a + Send + Sync>>,
+    objects: Vec<BoxedObject<'a>>,
 }
 
 impl<'a> ObjectList<'a> {
-    pub fn new(objects: Vec<Box<dyn Object + Send + Sync>>) -> Self {
+    pub fn new(objects: Vec<BoxedObject<'a>>) -> Self {
         Self { objects }
     }
 
     pub fn add(&mut self, object: impl Object + 'a + Send + Sync) {
         self.objects.push(Box::new(object));
+    }
+
+    pub fn objects(&self) -> &[BoxedObject<'a>] {
+        &self.objects
     }
 }
 
@@ -29,5 +34,26 @@ impl Object for ObjectList<'_> {
         }
 
         hit_record
+    }
+
+    fn bounding_box(&self, time0: f64, time1: f64) -> Option<crate::aabb::AABB> {
+        if self.objects.is_empty() {
+            return None;
+        }
+
+        let mut output_box: Option<AABB> = None;
+
+        for object in &self.objects {
+            if let Some(tmp_box) = object.bounding_box(time0, time1) {
+                output_box = match output_box {
+                    Some(output_box) => Some(AABB::surrounding_box(&output_box, &tmp_box)),
+                    None => Some(tmp_box),
+                };
+            } else {
+                return None;
+            }
+        }
+
+        output_box
     }
 }

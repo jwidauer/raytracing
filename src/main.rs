@@ -7,11 +7,13 @@ use ray::Ray;
 
 use crate::{camera::Camera, image::Image, vec3::Point3};
 
+mod aabb;
 mod camera;
 mod color;
 mod image;
 mod materials;
 mod objects;
+mod rand_ext;
 mod ray;
 mod scenes;
 mod vec3;
@@ -23,7 +25,7 @@ fn main() -> Result<()> {
     let width = (height as f64 * aspect_ratio) as usize;
     let mut image = Image::new(width, height);
 
-    let samples_per_pixel = 500;
+    let samples_per_pixel = 100;
     let max_depth = 50;
 
     // World
@@ -46,6 +48,8 @@ fn main() -> Result<()> {
         aspect_ratio,
         aperture,
         focus_dist,
+        0.,
+        1.,
     );
 
     // Set up progress bar

@@ -4,6 +4,7 @@ mod lambertian;
 mod metal;
 
 pub use dielectric::Dielectric;
+use dyn_clonable::clonable;
 pub use lambertian::Lambertian;
 pub use metal::Metal;
 
@@ -14,6 +15,9 @@ pub struct ScatterRecord {
     pub scattered: Ray,
 }
 
-pub trait Material {
+#[clonable]
+pub trait Material: Clone {
     fn scatter(&self, ray: &Ray, hit_record: &HitRecord) -> Option<ScatterRecord>;
 }
+
+pub type BoxedMaterial<'a> = Box<dyn Material + Send + Sync + 'a>;

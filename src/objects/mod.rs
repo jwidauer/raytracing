@@ -1,10 +1,13 @@
+use dyn_clonable::*;
+
+mod bvh_node;
 mod object_list;
 mod sphere;
 
 pub use object_list::ObjectList;
 pub use sphere::Sphere;
 
-use crate::{materials::Material, ray::Ray, vec3::Vec3};
+use crate::{aabb::AABB, materials::Material, ray::Ray, vec3::Vec3};
 
 pub struct HitRecord<'a> {
     pub point: Vec3,
@@ -30,6 +33,10 @@ impl HitRecord<'_> {
     }
 }
 
-pub trait Object {
+#[clonable]
+pub trait Object: Clone {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord>;
+    fn bounding_box(&self, time0: f64, time1: f64) -> Option<AABB>;
 }
+
+type BoxedObject<'a> = Box<dyn Object + Send + Sync + 'a>;

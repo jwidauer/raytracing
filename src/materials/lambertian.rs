@@ -14,7 +14,7 @@ impl Lambertian {
 }
 
 impl Material for Lambertian {
-    fn scatter(&self, _ray: &Ray, hit_record: &HitRecord) -> Option<ScatterRecord> {
+    fn scatter(&self, ray: &Ray, hit_record: &HitRecord) -> Option<ScatterRecord> {
         let mut scatter_direction =
             hit_record.normal + diffusers::random_lambertian(&hit_record.normal);
 
@@ -22,7 +22,7 @@ impl Material for Lambertian {
             scatter_direction = hit_record.normal;
         }
 
-        let scattered = Ray::new(hit_record.point, scatter_direction);
+        let scattered = Ray::new_time_based(hit_record.point, scatter_direction, ray.time());
 
         Some(ScatterRecord {
             attenuation: self.albedo,

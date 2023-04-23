@@ -15,6 +15,10 @@ impl Vec3 {
         Vec3 { e: [e0, e1, e2] }
     }
 
+    pub fn zero() -> Vec3 {
+        Vec3::new(0., 0., 0.)
+    }
+
     pub fn x(&self) -> f64 {
         self.e[0]
     }

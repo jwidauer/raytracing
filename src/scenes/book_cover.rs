@@ -1,6 +1,7 @@
+use crate::rand_ext::rand;
 use crate::{
     color::Color,
-    materials::{Dielectric, Lambertian, Material, Metal},
+    materials::{Dielectric, Lambertian, Metal},
     objects::{ObjectList, Sphere},
     vec3::Point3,
 };
@@ -22,21 +23,22 @@ pub fn new() -> ObjectList<'static> {
             );
 
             if (center - Point3::new(4.0, 0.2, 0.0)).length() > 0.9 {
-                let sphere_material: Box<dyn Material + Send + Sync> = if choose_mat < 0.8 {
+                let sphere = if choose_mat < 0.8 {
                     // diffuse
                     let albedo = Color::random() * Color::random();
-                    Box::new(Lambertian::new(albedo))
+                    let center2 =
+                        center + Point3::new(0.0, rand::random_range::<f64>(0., 0.2), 0.0);
+                    Sphere::new_moving(center, center2, 0., 1., 0.2, Lambertian::new(albedo))
                 } else if choose_mat < 0.95 {
                     // metal
                     let albedo = Color::random_range(0.5, 1.0);
                     let fuzz = 0.5 * rand::random::<f64>();
-                    Box::new(Metal::new(albedo, fuzz))
+                    Sphere::new(center, 0.2, Metal::new(albedo, fuzz))
                 } else {
                     // glass
-                    Box::new(Dielectric::new(1.5))
+                    Sphere::new(center, 0.2, Dielectric::new(1.5))
                 };
 
-                let sphere = Sphere::new_boxed(center, 0.2, sphere_material);
                 world.add(sphere);
             }
         }
