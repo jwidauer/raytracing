@@ -18,15 +18,6 @@ impl Image {
         }
     }
 
-    pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut Color> {
-        self.pixels.iter_mut()
-    }
-
-    pub fn set_pixel(&mut self, x: usize, y: usize, color: Color) {
-        let index = (y * self.width + x) as usize;
-        self.pixels[index as usize] = color;
-    }
-
     pub fn write_ppm(&self, filename: &str) -> Result<(), std::io::Error> {
         let mut writer = BufWriter::new(File::create(filename)?);
         writeln!(writer, "P3")?;

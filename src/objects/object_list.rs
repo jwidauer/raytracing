@@ -14,10 +14,6 @@ impl<'a> ObjectList<'a> {
     pub fn add(&mut self, object: impl Object + 'a + Send + Sync) {
         self.objects.push(Box::new(object));
     }
-
-    pub fn clear(&mut self) {
-        self.objects.clear();
-    }
 }
 
 impl Object for ObjectList<'_> {
