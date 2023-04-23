@@ -1,7 +1,9 @@
 mod checker;
+mod noise;
 mod solid_color;
 
 pub use checker::Checker;
+pub use noise::Noise;
 pub use solid_color::SolidColor;
 
 use dyn_clonable::clonable;

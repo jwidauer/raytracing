@@ -14,6 +14,7 @@ mod color;
 mod image;
 mod materials;
 mod objects;
+mod perlin;
 mod rand_ext;
 mod ray;
 mod scenes;
@@ -49,6 +50,12 @@ fn setup_scene(aspect_ratio: f64, scene_type: SceneType, time: Time) -> (Scene<'
             vfov = 20.0;
             aperture = 0.1;
         }
+        SceneType::PerlinSpheres => {
+            cam_pos = Point3::new(13.0, 2.0, 3.0);
+            look_at = Point3::new(0.0, 0.0, 0.0);
+            vfov = 20.0;
+            aperture = 0.0;
+        }
     }
 
     let vup = Point3::new(0.0, 1.0, 0.0);
@@ -79,7 +86,7 @@ fn main() -> Result<()> {
 
     let timeframe = Time::from_exposure(1.0);
 
-    let (world, camera) = setup_scene(aspect_ratio, SceneType::TwoSpheres, timeframe);
+    let (world, camera) = setup_scene(aspect_ratio, SceneType::PerlinSpheres, timeframe);
 
     // Set up progress bar
     let progress = ProgressBar::new((image.height * image.width) as u64).with_style(
