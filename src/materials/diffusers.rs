@@ -1,5 +1,6 @@
 use crate::vec3::Vec3;
 
+#[allow(dead_code)]
 pub fn random_in_hemisphere(normal: &Vec3) -> Vec3 {
     let v = random_in_unit_sphere();
     if v.dot(normal) > 0.0 {

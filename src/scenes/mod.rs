@@ -11,6 +11,7 @@ pub struct Scene<'a> {
     objects: ObjectList<'a>,
 }
 
+#[allow(dead_code)]
 pub enum SceneType {
     ThreeSpheres,
     BookCover,
