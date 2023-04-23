@@ -1,5 +1,7 @@
 /target
 
 *.ppm
+*.png
+*.jpg
 *.coz
 *.data

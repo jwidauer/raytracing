@@ -1,8 +1,10 @@
 mod checker;
+mod image_texture;
 mod noise;
 mod solid_color;
 
 pub use checker::Checker;
+pub use image_texture::ImageTexture;
 pub use noise::Noise;
 pub use solid_color::SolidColor;
 

@@ -26,36 +26,16 @@ fn setup_scene(aspect_ratio: f64, scene_type: SceneType, time: Time) -> (Scene<'
     let world = Scene::new(scene_type, time);
 
     // Camera
-    let cam_pos;
-    let look_at;
-    let vfov;
-    let aperture;
+    let cam_pos = Point3::new(13.0, 2.0, 3.0);
+    let look_at = Point3::new(0.0, 0.0, 0.0);
+    let vfov = 20.0;
+    let mut aperture = 0.0;
 
     match scene_type {
-        SceneType::TwoSpheres => {
-            cam_pos = Point3::new(13.0, 2.0, 3.0);
-            look_at = Point3::new(0.0, 0.0, 0.0);
-            vfov = 20.0;
-            aperture = 0.0;
-        }
-        SceneType::ThreeSpheres => {
-            cam_pos = Point3::new(13.0, 2.0, 3.0);
-            look_at = Point3::new(0.0, 0.0, 0.0);
-            vfov = 20.0;
-            aperture = 0.0;
-        }
         SceneType::BookCover => {
-            cam_pos = Point3::new(13.0, 2.0, 3.0);
-            look_at = Point3::new(0.0, 0.0, 0.0);
-            vfov = 20.0;
             aperture = 0.1;
         }
-        SceneType::PerlinSpheres => {
-            cam_pos = Point3::new(13.0, 2.0, 3.0);
-            look_at = Point3::new(0.0, 0.0, 0.0);
-            vfov = 20.0;
-            aperture = 0.0;
-        }
+        _ => {}
     }
 
     let vup = Point3::new(0.0, 1.0, 0.0);
@@ -86,7 +66,7 @@ fn main() -> Result<()> {
 
     let timeframe = Time::from_exposure(1.0);
 
-    let (world, camera) = setup_scene(aspect_ratio, SceneType::PerlinSpheres, timeframe);
+    let (world, camera) = setup_scene(aspect_ratio, SceneType::Globe, timeframe);
 
     // Set up progress bar
     let progress = ProgressBar::new((image.height * image.width) as u64).with_style(

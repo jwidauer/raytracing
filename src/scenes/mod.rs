@@ -1,4 +1,5 @@
 mod book_cover;
+mod globe;
 mod perlin_spheres;
 mod three_spheres;
 mod two_spheres;
@@ -16,6 +17,7 @@ pub enum SceneType {
     ThreeSpheres,
     BookCover,
     PerlinSpheres,
+    Globe,
 }
 
 impl Scene<'_> {
@@ -32,6 +34,9 @@ impl Scene<'_> {
             },
             SceneType::PerlinSpheres => Self {
                 objects: Box::new(perlin_spheres::new()),
+            },
+            SceneType::Globe => Self {
+                objects: Box::new(globe::new()),
             },
         }
     }
