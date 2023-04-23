@@ -10,10 +10,18 @@ pub struct Sphere<'a> {
 
 impl<'a> Sphere<'a> {
     pub fn new(center: Point3, radius: f64, material: impl Material + 'a + Send + Sync) -> Self {
+        Self::new_boxed(center, radius, Box::new(material))
+    }
+
+    pub fn new_boxed(
+        center: Point3,
+        radius: f64,
+        material: Box<dyn Material + 'a + Send + Sync>,
+    ) -> Self {
         Self {
             center,
             radius,
-            material: Box::new(material),
+            material,
         }
     }
 }

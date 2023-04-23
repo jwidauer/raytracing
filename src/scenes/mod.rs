@@ -1,3 +1,4 @@
+mod book_cover;
 mod three_spheres;
 
 use crate::{
@@ -12,6 +13,7 @@ pub struct Scene<'a> {
 
 pub enum SceneType {
     ThreeSpheres,
+    BookCover,
 }
 
 impl Scene<'_> {
@@ -19,6 +21,9 @@ impl Scene<'_> {
         match scene_type {
             SceneType::ThreeSpheres => Self {
                 objects: three_spheres::new(),
+            },
+            SceneType::BookCover => Self {
+                objects: book_cover::new(),
             },
         }
     }

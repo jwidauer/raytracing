@@ -23,21 +23,21 @@ fn main() -> Result<()> {
     let width = (height as f64 * aspect_ratio) as usize;
     let mut image = Image::new(width, height);
 
-    let samples_per_pixel = 100;
+    let samples_per_pixel = 500;
     let max_depth = 50;
 
     // World
-    let world = scenes::Scene::new(scenes::SceneType::ThreeSpheres);
+    let world = scenes::Scene::new(scenes::SceneType::BookCover);
 
     // Camera
-    let cam_pos = Point3::new(-2.0, 2.0, 1.0);
-    let look_at = Point3::new(0.0, 0.0, -1.0);
+    let cam_pos = Point3::new(13.0, 2.0, 3.0);
+    let look_at = Point3::new(0.0, 0.0, 0.0);
     let cam_dir = cam_pos - look_at;
 
     let vup = Point3::new(0.0, 1.0, 0.0);
 
-    let focus_dist = cam_dir.length();
-    let aperture = 0.0;
+    let focus_dist = 10.0;
+    let aperture = 0.1;
 
     let camera = Camera::new(
         Ray::new(cam_pos, cam_dir),

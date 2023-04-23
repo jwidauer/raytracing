@@ -11,6 +11,14 @@ impl Color {
     pub fn new(r: f64, g: f64, b: f64) -> Self {
         Self(Vec3::new(r, g, b))
     }
+
+    pub fn random() -> Self {
+        Self(Vec3::random())
+    }
+
+    pub fn random_range(min: f64, max: f64) -> Self {
+        Self(Vec3::random_range(min, max))
+    }
 }
 
 impl std::fmt::Display for Color {
