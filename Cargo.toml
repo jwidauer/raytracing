@@ -14,6 +14,7 @@ indicatif = "0.17.3"
 overload = "0.1.1"
 rand = "0.8.5"
 rayon = "1.7.0"
+thiserror = "1.0.40"
 
 [profile.release]
 debug = true

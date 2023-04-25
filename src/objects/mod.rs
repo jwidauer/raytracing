@@ -2,11 +2,15 @@ use dyn_clonable::*;
 
 mod bvh_node;
 mod object_list;
+mod rectangle;
 mod sphere;
+mod triangle;
 
 pub use bvh_node::BvhNode;
 pub use object_list::ObjectList;
+pub use rectangle::Rectangle;
 pub use sphere::Sphere;
+pub use triangle::Triangle;
 
 use crate::{aabb::AABB, materials::Material, ray::Ray, time::Time, vec3::Vec3};
 

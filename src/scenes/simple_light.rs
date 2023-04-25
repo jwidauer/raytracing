@@ -1,7 +1,7 @@
 use crate::{
     color::Color,
     materials::{Dielectric, DiffuseLight, Lambertian},
-    objects::{Object, ObjectList, Sphere},
+    objects::{Object, ObjectList, Rectangle, Sphere},
     textures::{ImageTexture, Noise},
     vec3::Point3,
 };
@@ -25,6 +25,14 @@ pub fn new() -> impl Object {
         Point3::new(-4.5, 2.0, 0.0),
         2.0,
         Lambertian::from_texture(ImageTexture::new("assets/earthmap.jpg")),
+    ));
+    objects.add(Rectangle::new_yz(
+        3.0,
+        5.0,
+        1.0,
+        3.0,
+        -2.0,
+        DiffuseLight::from_color(Color::new(4.0, 4.0, 4.0)),
     ));
 
     let light_texture = DiffuseLight::from_color(Color::new(4.0, 4.0, 4.0));
