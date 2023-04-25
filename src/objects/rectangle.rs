@@ -1,12 +1,8 @@
+use std::sync::Arc;
+
 use thiserror::Error;
 
-use crate::{
-    aabb::AABB,
-    materials::{BoxedMaterial, Material},
-    ray::Ray,
-    time::Time,
-    vec3::Point3,
-};
+use crate::{aabb::AABB, materials::Material, ray::Ray, time::Time, vec3::Point3};
 
 use super::{triangle::Triangle, HitRecord, Object};
 
@@ -36,8 +32,7 @@ impl<'a> Rectangle<'a> {
             return Err(RectangleError::NotPlanar);
         }
 
-        let material = Box::new(material);
-        let material = material as BoxedMaterial<'a>;
+        let material = Arc::new(material);
         Ok(Rectangle {
             triangle1: Triangle::new(p0, p1, p2, material.clone()),
             triangle2: Triangle::new(p0, p2, p3, material),

@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use crate::{aabb::AABB, ray::Ray, time::Time};
 
 use super::{BoxedObject, HitRecord, Object};
@@ -13,7 +15,7 @@ impl<'a> ObjectList<'a> {
     }
 
     pub fn add(&mut self, object: impl Object + 'a + Send + Sync) {
-        self.objects.push(Box::new(object));
+        self.objects.push(Arc::new(object));
     }
 
     pub fn objects(&self) -> &[BoxedObject<'a>] {

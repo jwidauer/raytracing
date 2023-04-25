@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use crate::{
     aabb::AABB,
     materials::{BoxedMaterial, Material},
@@ -17,7 +19,7 @@ pub struct Sphere<'a> {
 
 impl<'a> Sphere<'a> {
     pub fn new(center: Point3, radius: f64, material: impl Material + 'a + Send + Sync) -> Self {
-        Self::new_boxed(center, radius, Box::new(material))
+        Self::new_boxed(center, radius, Arc::new(material))
     }
 
     pub fn new_boxed(center: Point3, radius: f64, material: BoxedMaterial<'a>) -> Self {
@@ -35,7 +37,7 @@ impl<'a> Sphere<'a> {
         radius: f64,
         material: impl Material + 'a + Send + Sync,
     ) -> Self {
-        Self::new_moving_boxed(center0, center1, timeframe, radius, Box::new(material))
+        Self::new_moving_boxed(center0, center1, timeframe, radius, Arc::new(material))
     }
 
     pub fn new_moving_boxed(

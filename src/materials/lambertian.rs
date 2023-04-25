@@ -2,31 +2,29 @@ use crate::{
     color::Color,
     objects::HitRecord,
     ray::Ray,
-    textures::{BoxedTexture, SolidColor, Texture},
+    textures::{SolidColor, TextureEnum},
 };
 
 use super::{diffusers, Material, ScatterRecord};
 
 #[derive(Clone)]
-pub struct Lambertian<'a> {
-    texture: BoxedTexture<'a>,
+pub struct Lambertian {
+    texture: TextureEnum,
 }
 
-impl<'a> Lambertian<'a> {
+impl Lambertian {
     pub fn new(albedo: Color) -> Self {
         Self {
-            texture: Box::new(SolidColor::new(albedo)),
+            texture: TextureEnum::SolidColor(SolidColor::new(albedo)),
         }
     }
 
-    pub fn from_texture(texture: impl Texture + Send + Sync + 'a) -> Self {
-        Self {
-            texture: Box::new(texture),
-        }
+    pub fn from_texture(texture: TextureEnum) -> Self {
+        Self { texture: texture }
     }
 }
 
-impl Material for Lambertian<'_> {
+impl Material for Lambertian {
     fn scatter(&self, ray: &Ray, hit_record: &HitRecord) -> Option<ScatterRecord> {
         let mut scatter_direction =
             hit_record.normal + diffusers::random_lambertian(&hit_record.normal);

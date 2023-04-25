@@ -4,7 +4,7 @@ mod diffusers;
 mod lambertian;
 mod metal;
 
-use dyn_clonable::clonable;
+use std::sync::Arc;
 
 pub use dielectric::Dielectric;
 pub use diffuse_light::DiffuseLight;
@@ -18,12 +18,11 @@ pub struct ScatterRecord {
     pub scattered: Ray,
 }
 
-#[clonable]
-pub trait Material: Clone {
+pub trait Material {
     fn scatter(&self, ray: &Ray, hit_record: &HitRecord) -> Option<ScatterRecord>;
     fn emitted(&self, _u: f64, _v: f64, _point: &Vec3) -> Color {
         Color::new(0.0, 0.0, 0.0)
     }
 }
 
-pub type BoxedMaterial<'a> = Box<dyn Material + Send + Sync + 'a>;
+pub type BoxedMaterial<'a> = Arc<dyn Material + Send + Sync + 'a>;

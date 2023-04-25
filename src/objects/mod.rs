@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use dyn_clonable::*;
 
 mod bvh_node;
@@ -46,4 +48,4 @@ pub trait Object: Clone {
     fn bounding_box(&self, timeframe: Time) -> Option<AABB>;
 }
 
-pub type BoxedObject<'a> = Box<dyn Object + Send + Sync + 'a>;
+pub type BoxedObject<'a> = Arc<dyn Object + Send + Sync + 'a>;

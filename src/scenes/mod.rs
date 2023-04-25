@@ -5,6 +5,8 @@ mod simple_light;
 mod three_spheres;
 mod two_spheres;
 
+use std::sync::Arc;
+
 use crate::{color::Color, objects::BoxedObject, ray::Ray, time::Time};
 
 pub struct Scene<'a> {
@@ -26,12 +28,12 @@ pub enum SceneType {
 impl Scene<'_> {
     pub fn new(scene_type: SceneType, time: Time, background: Color) -> Self {
         let objects: BoxedObject = match scene_type {
-            SceneType::TwoSpheres => Box::new(two_spheres::new(time)),
-            SceneType::ThreeSpheres => Box::new(three_spheres::new(time)),
-            SceneType::BookCover => Box::new(book_cover::new(time)),
-            SceneType::PerlinSpheres => Box::new(perlin_spheres::new()),
-            SceneType::Globe => Box::new(globe::new()),
-            SceneType::SimpleLight => Box::new(simple_light::new()),
+            SceneType::TwoSpheres => Arc::new(two_spheres::new(time)),
+            SceneType::ThreeSpheres => Arc::new(three_spheres::new(time)),
+            SceneType::BookCover => Arc::new(book_cover::new(time)),
+            SceneType::PerlinSpheres => Arc::new(perlin_spheres::new()),
+            SceneType::Globe => Arc::new(globe::new()),
+            SceneType::SimpleLight => Arc::new(simple_light::new()),
         };
 
         Self {

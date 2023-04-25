@@ -15,13 +15,13 @@ pub fn new(_timeframe: Time) -> impl Object {
     world.add(Sphere::new(
         Point3::new(0.0, -10.0, 0.0),
         10.0,
-        Lambertian::from_texture(checker.clone()),
+        Lambertian::from_texture(checker.clone().into()),
     ));
 
     world.add(Sphere::new(
         Point3::new(0.0, 10.0, 0.0),
         10.0,
-        Lambertian::from_texture(checker),
+        Lambertian::from_texture(checker.into()),
     ));
 
     world

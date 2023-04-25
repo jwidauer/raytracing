@@ -13,7 +13,7 @@ pub fn new(time: Time) -> impl Object {
     let mut world = ObjectList::new(vec![]);
 
     let checker = Checker::from_colors(Color::new(0.2, 0.3, 0.1), Color::new(0.9, 0.9, 0.9));
-    let ground_material = Lambertian::from_texture(checker);
+    let ground_material = Lambertian::from_texture(checker.into());
     let ground = Sphere::new(Point3::new(0.0, -1000.0, 0.0), 1000.0, ground_material);
     world.add(ground);
 

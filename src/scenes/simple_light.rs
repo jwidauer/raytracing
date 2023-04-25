@@ -13,7 +13,7 @@ pub fn new() -> impl Object {
     objects.add(Sphere::new(
         Point3::new(0.0, -1000.0, 0.0),
         1000.0,
-        Lambertian::from_texture(perlin_texture),
+        Lambertian::from_texture(perlin_texture.into()),
     ));
 
     objects.add(Sphere::new(
@@ -24,7 +24,7 @@ pub fn new() -> impl Object {
     objects.add(Sphere::new(
         Point3::new(-4.5, 2.0, 0.0),
         2.0,
-        Lambertian::from_texture(ImageTexture::new("assets/earthmap.jpg")),
+        Lambertian::from_texture(ImageTexture::new("assets/earthmap.jpg").into()),
     ));
     objects.add(Rectangle::new_yz(
         3.0,
