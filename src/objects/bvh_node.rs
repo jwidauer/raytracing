@@ -1,4 +1,4 @@
-use std::{cmp::Ordering, sync::Arc};
+use std::cmp::Ordering;
 
 use crate::{aabb::AABB, time::Time};
 
@@ -39,8 +39,8 @@ impl<'a> BvhNode<'a> {
             objects.sort_by(comparator);
 
             let mid = objects.len() / 2;
-            left = Arc::new(BvhNode::new(&objects[..mid], timeframe));
-            right = Arc::new(BvhNode::new(&objects[mid..], timeframe));
+            left = Box::new(BvhNode::new(&objects[..mid], timeframe));
+            right = Box::new(BvhNode::new(&objects[mid..], timeframe));
         }
 
         let box_left = left.bounding_box(timeframe).unwrap();

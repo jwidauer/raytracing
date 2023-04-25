@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use dyn_clonable::*;
 
 mod bvh_node;
@@ -14,14 +12,14 @@ pub use rectangle::Rectangle;
 pub use sphere::Sphere;
 pub use triangle::Triangle;
 
-use crate::{aabb::AABB, materials::Material, ray::Ray, time::Time, vec3::Vec3};
+use crate::{aabb::AABB, materials::MaterialEnum, ray::Ray, time::Time, vec3::Vec3};
 
 pub struct HitRecord<'a> {
     pub point: Vec3,
     pub normal: Vec3,
     pub t: f64,
     pub front_face: bool,
-    pub material: &'a dyn Material,
+    pub material: &'a MaterialEnum,
     pub u: f64,
     pub v: f64,
 }
@@ -48,4 +46,4 @@ pub trait Object: Clone {
     fn bounding_box(&self, timeframe: Time) -> Option<AABB>;
 }
 
-pub type BoxedObject<'a> = Arc<dyn Object + Send + Sync + 'a>;
+pub type BoxedObject<'a> = Box<dyn Object + Send + Sync + 'a>;

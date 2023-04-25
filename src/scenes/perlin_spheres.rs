@@ -12,13 +12,13 @@ pub fn new() -> impl Object {
     objects.add(Sphere::new(
         Point3::new(0.0, -1000.0, 0.0),
         1000.0,
-        Lambertian::from_texture(perlin_texture.clone().into()),
+        Lambertian::from_texture(perlin_texture.clone().into()).into(),
     ));
 
     objects.add(Sphere::new(
         Point3::new(0.0, 2.0, 0.0),
         2.0,
-        Lambertian::from_texture(perlin_texture.into()),
+        Lambertian::from_texture(perlin_texture.into()).into(),
     ));
 
     objects

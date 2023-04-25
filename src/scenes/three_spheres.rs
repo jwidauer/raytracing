@@ -17,27 +17,27 @@ pub fn new(_time: Time) -> impl Object {
     world.add(Sphere::new(
         Point3::new(0.0, -100.5, -1.0),
         100.0,
-        ground_material,
+        ground_material.into(),
     ));
     world.add(Sphere::new(
         Point3::new(0.0, 0.0, -1.0),
         0.5,
-        center_material,
+        center_material.into(),
     ));
     world.add(Sphere::new(
         Point3::new(-1.0, 0.0, -1.0),
         0.5,
-        left_material.clone(),
+        left_material.clone().into(),
     ));
     world.add(Sphere::new(
         Point3::new(-1.0, 0.0, -1.0),
         -0.4,
-        left_material,
+        left_material.into(),
     ));
     world.add(Sphere::new(
         Point3::new(1.0, 0.0, -1.0),
         0.5,
-        right_material,
+        right_material.into(),
     ));
 
     world

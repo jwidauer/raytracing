@@ -1,17 +1,17 @@
-use crate::{aabb::AABB, materials::BoxedMaterial, ray::Ray, vec3::Vec3};
+use crate::{aabb::AABB, materials::MaterialEnum, ray::Ray, vec3::Vec3};
 
 use super::{HitRecord, Object};
 
 #[derive(Clone)]
-pub struct Triangle<'a> {
+pub struct Triangle {
     v0: Vec3,
     v1: Vec3,
     v2: Vec3,
-    material: BoxedMaterial<'a>,
+    material: MaterialEnum,
 }
 
-impl<'a> Triangle<'a> {
-    pub fn new(v0: Vec3, v1: Vec3, v2: Vec3, material: BoxedMaterial<'a>) -> Self {
+impl Triangle {
+    pub fn new(v0: Vec3, v1: Vec3, v2: Vec3, material: MaterialEnum) -> Self {
         Self {
             v0,
             v1,
@@ -21,7 +21,7 @@ impl<'a> Triangle<'a> {
     }
 }
 
-impl Object for Triangle<'_> {
+impl Object for Triangle {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
         // Möller–Trumbore intersection algorithm
         // Reference: https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
@@ -60,7 +60,7 @@ impl Object for Triangle<'_> {
             normal,
             t,
             front_face,
-            material: &*self.material,
+            material: &self.material,
             u,
             v,
         })

@@ -1,8 +1,6 @@
-use std::sync::Arc;
-
 use thiserror::Error;
 
-use crate::{aabb::AABB, materials::Material, ray::Ray, time::Time, vec3::Point3};
+use crate::{aabb::AABB, materials::MaterialEnum, ray::Ray, time::Time, vec3::Point3};
 
 use super::{triangle::Triangle, HitRecord, Object};
 
@@ -13,18 +11,18 @@ pub enum RectangleError {
 }
 
 #[derive(Clone)]
-pub struct Rectangle<'a> {
-    triangle1: Triangle<'a>,
-    triangle2: Triangle<'a>,
+pub struct Rectangle {
+    triangle1: Triangle,
+    triangle2: Triangle,
 }
 
-impl<'a> Rectangle<'a> {
+impl Rectangle {
     pub fn new(
         p0: Point3,
         p1: Point3,
         p2: Point3,
         p3: Point3,
-        material: impl Material + 'a + Send + Sync,
+        material: MaterialEnum,
     ) -> Result<Self, RectangleError> {
         if !((p1 - p0).cross(&(p2 - p0)).normalized() - (p2 - p0).cross(&(p3 - p0)).normalized())
             .near_zero()
@@ -32,7 +30,6 @@ impl<'a> Rectangle<'a> {
             return Err(RectangleError::NotPlanar);
         }
 
-        let material = Arc::new(material);
         Ok(Rectangle {
             triangle1: Triangle::new(p0, p1, p2, material.clone()),
             triangle2: Triangle::new(p0, p2, p3, material),
@@ -41,19 +38,12 @@ impl<'a> Rectangle<'a> {
 
     pub fn from_points(
         points: [Point3; 4],
-        material: impl Material + 'a + Send + Sync,
+        material: MaterialEnum,
     ) -> Result<Self, RectangleError> {
         Self::new(points[0], points[1], points[2], points[3], material)
     }
 
-    pub fn new_xy(
-        x0: f64,
-        x1: f64,
-        y0: f64,
-        y1: f64,
-        z: f64,
-        material: impl Material + Send + Sync + 'a,
-    ) -> Self {
+    pub fn new_xy(x0: f64, x1: f64, y0: f64, y1: f64, z: f64, material: MaterialEnum) -> Self {
         let p0 = Point3::new(x0, y0, z);
         let p1 = Point3::new(x1, y0, z);
         let p2 = Point3::new(x1, y1, z);
@@ -62,14 +52,7 @@ impl<'a> Rectangle<'a> {
         Self::from_points([p0, p1, p2, p3], material).unwrap()
     }
 
-    pub fn new_xz(
-        x0: f64,
-        x1: f64,
-        z0: f64,
-        z1: f64,
-        y: f64,
-        material: impl Material + Send + Sync + 'a,
-    ) -> Self {
+    pub fn new_xz(x0: f64, x1: f64, z0: f64, z1: f64, y: f64, material: MaterialEnum) -> Self {
         let p0 = Point3::new(x0, y, z0);
         let p1 = Point3::new(x1, y, z0);
         let p2 = Point3::new(x1, y, z1);
@@ -78,14 +61,7 @@ impl<'a> Rectangle<'a> {
         Self::from_points([p0, p1, p2, p3], material).unwrap()
     }
 
-    pub fn new_yz(
-        y0: f64,
-        y1: f64,
-        z0: f64,
-        z1: f64,
-        x: f64,
-        material: impl Material + Send + Sync + 'a,
-    ) -> Self {
+    pub fn new_yz(y0: f64, y1: f64, z0: f64, z1: f64, x: f64, material: MaterialEnum) -> Self {
         let p0 = Point3::new(x, y0, z0);
         let p1 = Point3::new(x, y1, z0);
         let p2 = Point3::new(x, y1, z1);
@@ -95,7 +71,7 @@ impl<'a> Rectangle<'a> {
     }
 }
 
-impl Object for Rectangle<'_> {
+impl Object for Rectangle {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
         self.triangle1
             .hit(ray, t_min, t_max)

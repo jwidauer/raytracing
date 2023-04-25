@@ -1,8 +1,6 @@
-use std::sync::Arc;
-
 use crate::{
     aabb::AABB,
-    materials::{BoxedMaterial, Material},
+    materials::MaterialEnum,
     ray::Ray,
     time::Time,
     vec3::{Point3, Vec3},
@@ -11,18 +9,18 @@ use crate::{
 use super::{HitRecord, Object};
 
 #[derive(Clone)]
-pub struct Sphere<'a> {
+pub struct Sphere {
     movement: Ray,
     radius: f64,
-    material: BoxedMaterial<'a>,
+    material: MaterialEnum,
 }
 
-impl<'a> Sphere<'a> {
-    pub fn new(center: Point3, radius: f64, material: impl Material + 'a + Send + Sync) -> Self {
-        Self::new_boxed(center, radius, Arc::new(material))
+impl Sphere {
+    pub fn new(center: Point3, radius: f64, material: MaterialEnum) -> Self {
+        Self::new_boxed(center, radius, material)
     }
 
-    pub fn new_boxed(center: Point3, radius: f64, material: BoxedMaterial<'a>) -> Self {
+    pub fn new_boxed(center: Point3, radius: f64, material: MaterialEnum) -> Self {
         Self {
             movement: Ray::new(center, Vec3::zero()),
             radius,
@@ -35,9 +33,9 @@ impl<'a> Sphere<'a> {
         center1: Point3,
         timeframe: Time,
         radius: f64,
-        material: impl Material + 'a + Send + Sync,
+        material: MaterialEnum,
     ) -> Self {
-        Self::new_moving_boxed(center0, center1, timeframe, radius, Arc::new(material))
+        Self::new_moving_boxed(center0, center1, timeframe, radius, material)
     }
 
     pub fn new_moving_boxed(
@@ -45,7 +43,7 @@ impl<'a> Sphere<'a> {
         center1: Point3,
         timeframe: Time,
         radius: f64,
-        material: BoxedMaterial<'a>,
+        material: MaterialEnum,
     ) -> Self {
         let movement = Ray::new(
             center0,
@@ -68,7 +66,7 @@ impl<'a> Sphere<'a> {
     }
 }
 
-impl Object for Sphere<'_> {
+impl Object for Sphere {
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
         let oc = ray.origin() - self.movement.at(ray.time());
         let a = ray.direction().length_squared();
@@ -92,7 +90,7 @@ impl Object for Sphere<'_> {
                 normal,
                 t: root,
                 front_face,
-                material: self.material.as_ref(),
+                material: &self.material,
                 u,
                 v,
             })
