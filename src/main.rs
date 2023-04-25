@@ -67,12 +67,12 @@ fn main() -> Result<()> {
     let width = (height as f64 * aspect_ratio) as usize;
     let mut image = Image::new(width, height);
 
-    let samples_per_pixel = 1000;
+    let samples_per_pixel = 400;
     let max_depth = 50;
 
     let timeframe = Time::from_exposure(1.0);
 
-    let (world, camera) = setup_scene(aspect_ratio, SceneType::SimpleLight, timeframe);
+    let (world, camera) = setup_scene(aspect_ratio, SceneType::BookCover, timeframe);
 
     // Set up progress bar
     let progress = ProgressBar::new((image.height * image.width) as u64).with_style(
