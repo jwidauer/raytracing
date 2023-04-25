@@ -8,8 +8,6 @@ pub use image_texture::ImageTexture;
 pub use noise::Noise;
 pub use solid_color::SolidColor;
 
-use dyn_clonable::clonable;
-
 use crate::{color::Color, vec3::Vec3};
 
 #[derive(Clone)]
@@ -55,9 +53,6 @@ impl From<SolidColor> for TextureEnum {
     }
 }
 
-#[clonable]
-pub trait Texture: Clone {
+trait Texture {
     fn value(&self, u: f64, v: f64, point: &Vec3) -> Color;
 }
-
-pub type BoxedTexture<'a> = Box<dyn Texture + Send + Sync + 'a>;

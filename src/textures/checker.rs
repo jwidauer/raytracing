@@ -11,8 +11,8 @@ pub struct Checker {
 impl Checker {
     pub fn from_colors(odd: Color, even: Color) -> Self {
         Self {
-            odd: Box::new(TextureEnum::SolidColor(SolidColor::new(odd))),
-            even: Box::new(TextureEnum::SolidColor(SolidColor::new(even))),
+            odd: Box::new(SolidColor::new(odd).into()),
+            even: Box::new(SolidColor::new(even).into()),
         }
     }
 }

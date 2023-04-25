@@ -15,12 +15,12 @@ pub struct Lambertian {
 impl Lambertian {
     pub fn new(albedo: Color) -> Self {
         Self {
-            texture: TextureEnum::SolidColor(SolidColor::new(albedo)),
+            texture: SolidColor::new(albedo).into(),
         }
     }
 
     pub fn from_texture(texture: TextureEnum) -> Self {
-        Self { texture: texture }
+        Self { texture }
     }
 }
 
