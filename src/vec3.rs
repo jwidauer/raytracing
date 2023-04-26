@@ -40,7 +40,7 @@ impl Vec3 {
     }
 
     pub fn normalized(&self) -> Self {
-        self.clone() / self.length()
+        self / self.length()
     }
 
     pub fn dot(&self, v: &Vec3) -> f64 {

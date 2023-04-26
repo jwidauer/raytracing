@@ -54,7 +54,7 @@ impl<'a> BvhNode<'a> {
     }
 
     pub fn from_list(list: &ObjectList<'a>, timeframe: Time) -> Self {
-        Self::new(&list.objects(), timeframe)
+        Self::new(list.objects(), timeframe)
     }
 
     fn compare_along_axis<'b>(a: &BoxedObject<'b>, b: &BoxedObject<'b>, axis: usize) -> Ordering {

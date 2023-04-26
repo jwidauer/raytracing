@@ -14,7 +14,7 @@ impl Image {
         Self {
             width,
             height,
-            pixels: vec![Color::new(0., 0., 0.); (width * height) as usize],
+            pixels: vec![Color::new(0., 0., 0.); width * height],
         }
     }
 
@@ -26,8 +26,8 @@ impl Image {
 
         for j in (0..self.height).rev() {
             for i in 0..self.width {
-                let index = (j * self.width + i) as usize;
-                let pixel = self.pixels[index as usize];
+                let index = j * self.width + i;
+                let pixel = self.pixels[index];
                 writeln!(writer, "{}", pixel)?;
             }
         }

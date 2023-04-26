@@ -51,10 +51,10 @@ impl Perlin {
         let k = point.z().floor() as i64;
         let mut c = [[[Vec3::zero(); 2]; 2]; 2];
 
-        for di in 0..2 {
-            for dj in 0..2 {
-                for dk in 0..2 {
-                    c[di][dj][dk] = self.ranvec[self.perm_x[((i + di as i64) & 255) as usize]
+        for (di, ci) in c.iter_mut().enumerate() {
+            for (dj, cj) in ci.iter_mut().enumerate() {
+                for (dk, c) in cj.iter_mut().enumerate() {
+                    *c = self.ranvec[self.perm_x[((i + di as i64) & 255) as usize]
                         ^ self.perm_y[((j + dj as i64) & 255) as usize]
                         ^ self.perm_z[((k + dk as i64) & 255) as usize]]
                 }
@@ -71,14 +71,14 @@ impl Perlin {
 
         let mut accum = 0.0;
 
-        for i in 0..2 {
-            for j in 0..2 {
-                for k in 0..2 {
+        for (i, ci) in c.iter().enumerate() {
+            for (j, cj) in ci.iter().enumerate() {
+                for (k, c) in cj.iter().enumerate() {
                     let weight_v = Vec3::new(u - i as f64, v - j as f64, w - k as f64);
                     accum += (i as f64 * uu + (1. - i as f64) * (1. - uu))
                         * (j as f64 * vv + (1. - j as f64) * (1. - vv))
                         * (k as f64 * ww + (1. - k as f64) * (1. - ww))
-                        * c[i][j][k].dot(&weight_v);
+                        * c.dot(&weight_v);
                 }
             }
         }

@@ -7,7 +7,7 @@ use color::Color;
 use ray::Ray;
 use scenes::{Scene, SceneType};
 
-use crate::{camera::Camera, image::Image, objects::Sphere, time::Time, vec3::Point3};
+use crate::{camera::Camera, image::Image, time::Time, vec3::Point3};
 
 mod aabb;
 mod camera;

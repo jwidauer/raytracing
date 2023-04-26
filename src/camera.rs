@@ -34,7 +34,7 @@ impl Camera {
         let u = view_up.cross(&w).normalized();
         let v = w.cross(&u);
 
-        let origin = view_ray.origin().clone();
+        let origin = *view_ray.origin();
         let horizontal = focus_dist * viewport_width * u;
         let vertical = focus_dist * viewport_height * v;
         let lower_left_corner_direction = -horizontal / 2.0 - vertical / 2.0 - focus_dist * w;

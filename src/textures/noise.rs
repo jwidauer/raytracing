@@ -21,6 +21,6 @@ impl Texture for Noise {
     fn value(&self, _u: f64, _v: f64, point: &crate::vec3::Vec3) -> crate::color::Color {
         Color::new(1., 1., 1.)
             * 0.5
-            * (1. + (self.scale * point.z() + 10. * self.noise.turb(&point, 7)).sin())
+            * (1. + (self.scale * point.z() + 10. * self.noise.turb(point, 7)).sin())
     }
 }
