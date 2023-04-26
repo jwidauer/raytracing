@@ -5,6 +5,8 @@ mod simple_light;
 mod three_spheres;
 mod two_spheres;
 
+use clap::ValueEnum;
+
 use crate::{color::Color, objects::BoxedObject, ray::Ray, time::Time};
 
 pub struct Scene<'a> {
@@ -12,8 +14,7 @@ pub struct Scene<'a> {
     background: Color,
 }
 
-#[allow(dead_code)]
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy, ValueEnum)]
 pub enum SceneType {
     TwoSpheres,
     ThreeSpheres,

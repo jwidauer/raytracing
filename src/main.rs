@@ -1,4 +1,5 @@
 use anyhow::Result;
+use clap::Parser;
 use indicatif::{ProgressBar, ProgressStyle};
 use rayon::prelude::*;
 
@@ -6,7 +7,7 @@ use color::Color;
 use ray::Ray;
 use scenes::{Scene, SceneType};
 
-use crate::{camera::Camera, image::Image, time::Time, vec3::Point3};
+use crate::{camera::Camera, image::Image, objects::Sphere, time::Time, vec3::Point3};
 
 mod aabb;
 mod camera;
@@ -60,7 +61,17 @@ fn setup_scene(aspect_ratio: f64, scene_type: SceneType, time: Time) -> (Scene<'
     (world, camera)
 }
 
+#[derive(Parser)]
+#[command(author, version, about)]
+struct Cli {
+    /// The scene to render
+    #[arg(short = 't', long, value_enum)]
+    scene_type: SceneType,
+}
+
 fn main() -> Result<()> {
+    let args = Cli::parse();
+
     // Image
     let aspect_ratio = 16.0 / 9.0;
     let height = 720;
@@ -72,7 +83,7 @@ fn main() -> Result<()> {
 
     let timeframe = Time::from_exposure(1.0);
 
-    let (world, camera) = setup_scene(aspect_ratio, SceneType::BookCover, timeframe);
+    let (world, camera) = setup_scene(aspect_ratio, args.scene_type, timeframe);
 
     // Set up progress bar
     let progress = ProgressBar::new((image.height * image.width) as u64).with_style(
