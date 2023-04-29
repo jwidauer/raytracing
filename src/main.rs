@@ -61,6 +61,20 @@ fn setup_scene(aspect_ratio: f64, scene_type: SceneType, time: Time) -> (Scene<'
     (world, camera)
 }
 
+fn seperated<T>(num: T) -> String
+where
+    T: std::fmt::Display,
+{
+    num.to_string()
+        .as_bytes()
+        .rchunks(3)
+        .rev()
+        .map(std::str::from_utf8)
+        .collect::<Result<Vec<&str>, _>>()
+        .unwrap()
+        .join(",")
+}
+
 #[derive(Parser)]
 #[command(author, version, about)]
 struct Cli {
@@ -120,10 +134,21 @@ fn main() -> Result<()> {
             progress.inc(1);
         });
 
+    let render_time = now.elapsed();
+
     image.write_ppm("img.ppm")?;
     progress.finish();
 
-    println!("Done! Took {}ms", now.elapsed().as_millis());
+    println!("Done!");
+    println!(
+        "Total render time: {}ms",
+        seperated(render_time.as_millis())
+    );
+    println!("Total rays cast: {}", seperated(Ray::count()));
+    println!(
+        "Time per ray: {:.2}ns",
+        render_time.as_nanos() as f64 / Ray::count() as f64
+    );
 
     Ok(())
 }
