@@ -1,6 +1,7 @@
 use anyhow::Result;
 use clap::Parser;
 use indicatif::{ProgressBar, ProgressStyle};
+use prettytable::table;
 use rayon::prelude::*;
 
 use color::Color;
@@ -135,20 +136,40 @@ fn main() -> Result<()> {
         });
 
     let render_time = now.elapsed();
+    let single_core_render_time = render_time.mul_f32(num_cpus::get() as f32);
 
     image.write_ppm("img.ppm")?;
     progress.finish();
 
     println!("Done!");
-    println!(
-        "Total render time: {}ms",
-        seperated(render_time.as_millis())
+    let table = table!(
+        ["Nr. of threads", num_cpus::get()],
+        [
+            "Total render time",
+            format!("{}ms", seperated(render_time.as_millis()))
+        ],
+        [
+            "Total single core render time",
+            format!("{:.2}s", single_core_render_time.as_secs_f32())
+        ],
+        [
+            "Time per sample",
+            format!(
+                "{:.2}ns",
+                render_time.as_nanos() as f32
+                    / (image.width * image.height * samples_per_pixel) as f32
+            )
+        ],
+        [
+            "Single core time per sample",
+            format!(
+                "{:.2}ns",
+                single_core_render_time.as_nanos() as f32
+                    / (image.width * image.height * samples_per_pixel) as f32
+            )
+        ]
     );
-    println!("Total rays cast: {}", seperated(Ray::count()));
-    println!(
-        "Time per ray: {:.2}ns",
-        render_time.as_nanos() as f64 / Ray::count() as f64
-    );
+    table.printstd();
 
     Ok(())
 }
