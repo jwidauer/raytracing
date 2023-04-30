@@ -13,7 +13,7 @@ pub struct BvhNode<'a> {
 
 impl<'a> BvhNode<'a> {
     pub fn new(objects: &[BoxedObject<'a>], timeframe: Time) -> Self {
-        let axis: usize = (3.0 * rand::random::<f64>()) as usize;
+        let axis: usize = (3.0 * rand::random::<f32>()) as usize;
         let comparator = |a: &_, b: &_| BvhNode::compare_along_axis(a, b, axis);
 
         let left;
@@ -70,7 +70,7 @@ impl<'a> BvhNode<'a> {
 }
 
 impl Object for BvhNode<'_> {
-    fn hit(&self, ray: &crate::ray::Ray, t_min: f64, t_max: f64) -> Option<super::HitRecord> {
+    fn hit(&self, ray: &crate::ray::Ray, t_min: f32, t_max: f32) -> Option<super::HitRecord> {
         if !self.bounding_box.hit(ray, t_min, t_max) {
             return None;
         }

@@ -27,7 +27,7 @@ impl Perlin {
         }
     }
 
-    pub fn turb(&self, point: &Point3, depth: usize) -> f64 {
+    pub fn turb(&self, point: &Point3, depth: usize) -> f32 {
         let mut accum = 0.;
         let mut temp_p = *point;
         let mut weight = 1.;
@@ -41,7 +41,7 @@ impl Perlin {
         accum.abs()
     }
 
-    pub fn noise(&self, point: &Point3) -> f64 {
+    pub fn noise(&self, point: &Point3) -> f32 {
         let u = point.x() - point.x().floor();
         let v = point.y() - point.y().floor();
         let w = point.z() - point.z().floor();
@@ -64,7 +64,7 @@ impl Perlin {
         Self::perlin_interp(c, u, v, w)
     }
 
-    fn perlin_interp(c: [[[Vec3; 2]; 2]; 2], u: f64, v: f64, w: f64) -> f64 {
+    fn perlin_interp(c: [[[Vec3; 2]; 2]; 2], u: f32, v: f32, w: f32) -> f32 {
         let uu = u * u * (3. - 2. * u);
         let vv = v * v * (3. - 2. * v);
         let ww = w * w * (3. - 2. * w);
@@ -74,10 +74,10 @@ impl Perlin {
         for (i, ci) in c.iter().enumerate() {
             for (j, cj) in ci.iter().enumerate() {
                 for (k, c) in cj.iter().enumerate() {
-                    let weight_v = Vec3::new(u - i as f64, v - j as f64, w - k as f64);
-                    accum += (i as f64 * uu + (1. - i as f64) * (1. - uu))
-                        * (j as f64 * vv + (1. - j as f64) * (1. - vv))
-                        * (k as f64 * ww + (1. - k as f64) * (1. - ww))
+                    let weight_v = Vec3::new(u - i as f32, v - j as f32, w - k as f32);
+                    accum += (i as f32 * uu + (1. - i as f32) * (1. - uu))
+                        * (j as f32 * vv + (1. - j as f32) * (1. - vv))
+                        * (k as f32 * ww + (1. - k as f32) * (1. - ww))
                         * c.dot(&weight_v);
                 }
             }

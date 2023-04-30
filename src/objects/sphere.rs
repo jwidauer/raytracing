@@ -11,16 +11,16 @@ use super::{HitRecord, Object};
 #[derive(Clone)]
 pub struct Sphere<'a> {
     movement: Ray,
-    radius: f64,
+    radius: f32,
     material: BoxedMaterial<'a>,
 }
 
 impl<'a> Sphere<'a> {
-    pub fn new(center: Point3, radius: f64, material: impl Material + 'a + Send + Sync) -> Self {
+    pub fn new(center: Point3, radius: f32, material: impl Material + 'a + Send + Sync) -> Self {
         Self::new_boxed(center, radius, Box::new(material))
     }
 
-    pub fn new_boxed(center: Point3, radius: f64, material: BoxedMaterial<'a>) -> Self {
+    pub fn new_boxed(center: Point3, radius: f32, material: BoxedMaterial<'a>) -> Self {
         Self {
             movement: Ray::new(center, Vec3::zero()),
             radius,
@@ -32,7 +32,7 @@ impl<'a> Sphere<'a> {
         center0: Point3,
         center1: Point3,
         timeframe: Time,
-        radius: f64,
+        radius: f32,
         material: impl Material + 'a + Send + Sync,
     ) -> Self {
         Self::new_moving_boxed(center0, center1, timeframe, radius, Box::new(material))
@@ -42,7 +42,7 @@ impl<'a> Sphere<'a> {
         center0: Point3,
         center1: Point3,
         timeframe: Time,
-        radius: f64,
+        radius: f32,
         material: BoxedMaterial<'a>,
     ) -> Self {
         let movement = Ray::new(
@@ -57,8 +57,8 @@ impl<'a> Sphere<'a> {
     }
 
     // Compute the UV coordinates of a point on the surface of a unit sphere.
-    pub fn sphere_uv(p: &Vec3) -> (f64, f64) {
-        const PI: f64 = std::f64::consts::PI;
+    pub fn sphere_uv(p: &Vec3) -> (f32, f32) {
+        const PI: f32 = std::f32::consts::PI;
 
         let theta = (-p.y()).acos();
         let phi = (-p.z()).atan2(p.x()) + PI;
@@ -67,7 +67,7 @@ impl<'a> Sphere<'a> {
 }
 
 impl Object for Sphere<'_> {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
+    fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
         let oc = ray.origin() - self.movement.at(ray.time());
         let a = ray.direction().length_squared();
         let half_b = oc.dot(ray.direction());
@@ -80,7 +80,7 @@ impl Object for Sphere<'_> {
 
         let sqrt_disc = discriminant.sqrt();
 
-        let calc_hit_record = |root: f64| {
+        let calc_hit_record = |root: f32| {
             let p = ray.at(root);
             let normal = (p - self.movement.at(ray.time())) / self.radius;
             let (normal, front_face) = HitRecord::orient_towards_ray(ray, normal);

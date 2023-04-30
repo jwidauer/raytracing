@@ -33,7 +33,7 @@ impl Material for DiffuseLight<'_> {
         None
     }
 
-    fn emitted(&self, u: f64, v: f64, point: &Vec3) -> crate::color::Color {
+    fn emitted(&self, u: f32, v: f32, point: &Vec3) -> crate::color::Color {
         self.emit.value(u, v, point)
     }
 }

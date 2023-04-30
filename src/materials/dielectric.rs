@@ -5,25 +5,25 @@ use super::{Material, ScatterRecord};
 #[derive(Debug, Clone)]
 pub struct Dielectric {
     attenuation: Color,
-    refraction_index: f64,
+    refraction_index: f32,
 }
 
 impl Dielectric {
-    pub fn new(refraction_index: f64) -> Self {
+    pub fn new(refraction_index: f32) -> Self {
         Self {
             attenuation: Color::new(1.0, 1.0, 1.0),
             refraction_index,
         }
     }
 
-    pub fn from_color(color: Color, refraction_index: f64) -> Self {
+    pub fn from_color(color: Color, refraction_index: f32) -> Self {
         Self {
             attenuation: color,
             refraction_index,
         }
     }
 
-    fn reflectance(cosine: f64, refraction_index: f64) -> f64 {
+    fn reflectance(cosine: f32, refraction_index: f32) -> f32 {
         // Use Schlick's approximation for reflectance.
         let r0 = (1.0 - refraction_index) / (1.0 + refraction_index);
         let r0 = r0 * r0;

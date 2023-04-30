@@ -31,8 +31,8 @@ pub fn new() -> impl Object {
         5.0,
         1.0,
         3.0,
-        -2.0,
-        DiffuseLight::from_color(Color::new(4.0, 4.0, 4.0)),
+        5.0,
+        DiffuseLight::from_color(Color::new(4.0, 0.5, 0.5)),
     ));
 
     let light_texture = DiffuseLight::from_color(Color::new(4.0, 4.0, 4.0));

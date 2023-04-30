@@ -19,7 +19,7 @@ impl AABB {
         &self.max
     }
 
-    pub fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> bool {
+    pub fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> bool {
         for i in 0..3 {
             let inv_d = 1. / ray.direction()[i];
             let mut t0 = (self.min[i] - ray.origin()[i]) * inv_d;

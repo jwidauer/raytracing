@@ -21,7 +21,7 @@ pub struct ScatterRecord {
 #[clonable]
 pub trait Material: Clone {
     fn scatter(&self, ray: &Ray, hit_record: &HitRecord) -> Option<ScatterRecord>;
-    fn emitted(&self, _u: f64, _v: f64, _point: &Vec3) -> Color {
+    fn emitted(&self, _u: f32, _v: f32, _point: &Vec3) -> Color {
         Color::new(0.0, 0.0, 0.0)
     }
 }

@@ -22,7 +22,7 @@ impl<'a> Triangle<'a> {
 }
 
 impl Object for Triangle<'_> {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
+    fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
         // Möller–Trumbore intersection algorithm
         // Reference: https://en.wikipedia.org/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm
         let e1 = self.v1 - self.v0;

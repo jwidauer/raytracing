@@ -1,4 +1,5 @@
 mod book_cover;
+mod cornell_box;
 mod globe;
 mod perlin_spheres;
 mod simple_light;
@@ -22,6 +23,7 @@ pub enum SceneType {
     PerlinSpheres,
     Globe,
     SimpleLight,
+    CornellBox,
 }
 
 impl Scene<'_> {
@@ -33,6 +35,7 @@ impl Scene<'_> {
             SceneType::PerlinSpheres => Box::new(perlin_spheres::new()),
             SceneType::Globe => Box::new(globe::new()),
             SceneType::SimpleLight => Box::new(simple_light::new()),
+            SceneType::CornellBox => Box::new(cornell_box::new()),
         };
 
         Self {
@@ -45,7 +48,7 @@ impl Scene<'_> {
         let mut color = Color::new(1.0, 1.0, 1.0);
         let mut ray = ray.clone();
         for _ in 0..max_depth {
-            let hr = match self.objects.hit(&ray, 0.001, f64::INFINITY) {
+            let hr = match self.objects.hit(&ray, 0.001, f32::INFINITY) {
                 Some(hr) => hr,
                 None => {
                     // Background

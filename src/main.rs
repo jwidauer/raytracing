@@ -24,13 +24,15 @@ mod textures;
 mod time;
 mod vec3;
 
-fn setup_scene(aspect_ratio: f64, scene_type: SceneType, time: Time) -> (Scene<'static>, Camera) {
+fn setup_scene(scene_type: SceneType, time: Time) -> (Scene<'static>, Camera, Image) {
     // Camera
     let mut cam_pos = Point3::new(13.0, 2.0, 3.0);
     let mut look_at = Point3::new(0.0, 0.0, 0.0);
-    let vfov = 20.0;
+    let mut vfov = 20.0;
     let mut aperture = 0.0;
     let mut background = Color::new(0.7, 0.8, 1.0);
+    let mut aspect_ratio = 16.0 / 9.0;
+    let mut image_height = 720;
 
     match scene_type {
         SceneType::BookCover => {
@@ -41,12 +43,21 @@ fn setup_scene(aspect_ratio: f64, scene_type: SceneType, time: Time) -> (Scene<'
             look_at = Point3::new(0.0, 2.0, 0.0);
             background = Color::new(0.0, 0.0, 0.0);
         }
+        SceneType::CornellBox => {
+            cam_pos = Point3::new(278.0, 278.0, -800.0);
+            look_at = Point3::new(278.0, 278.0, 0.0);
+            background = Color::new(0.0, 0.0, 0.0);
+            vfov = 40.0;
+            image_height = 600;
+            aspect_ratio = 1.0;
+        }
         _ => {}
     }
 
     let vup = Point3::new(0.0, 1.0, 0.0);
     let focus_dist = 10.0;
 
+    // Camera
     let camera = Camera::new(
         Ray::new(cam_pos, cam_pos - look_at),
         vup,
@@ -57,9 +68,14 @@ fn setup_scene(aspect_ratio: f64, scene_type: SceneType, time: Time) -> (Scene<'
         time,
     );
 
+    // World
     let world = Scene::new(scene_type, time, background);
 
-    (world, camera)
+    // Image
+    let width = (image_height as f32 * aspect_ratio) as usize;
+    let image = Image::new(width, image_height);
+
+    (world, camera, image)
 }
 
 fn seperated<T>(num: T) -> String
@@ -87,18 +103,13 @@ struct Cli {
 fn main() -> Result<()> {
     let args = Cli::parse();
 
-    // Image
-    let aspect_ratio = 16.0 / 9.0;
-    let height = 720;
-    let width = (height as f64 * aspect_ratio) as usize;
-    let mut image = Image::new(width, height);
-
     let samples_per_pixel = 400;
     let max_depth = 50;
 
     let timeframe = Time::from_exposure(1.0);
 
-    let (world, camera) = setup_scene(aspect_ratio, args.scene_type, timeframe);
+    let (world, camera, image) = setup_scene(args.scene_type, timeframe);
+    let mut image = image;
 
     // Set up progress bar
     let progress = ProgressBar::new((image.height * image.width) as u64).with_style(
@@ -121,16 +132,16 @@ fn main() -> Result<()> {
             let y = idx / image.width;
 
             for _ in 0..samples_per_pixel {
-                let (r_u, r_v) = rand::random::<(f64, f64)>();
-                let u = (x as f64 + r_u) / (image.width - 1) as f64;
-                let v = (y as f64 + r_v) / (image.height - 1) as f64;
+                let (r_u, r_v) = rand::random::<(f32, f32)>();
+                let u = (x as f32 + r_u) / (image.width - 1) as f32;
+                let v = (y as f32 + r_v) / (image.height - 1) as f32;
 
                 let ray = camera.get_ray(u, v);
 
                 pixel_color += world.ray_color(&ray, max_depth);
             }
 
-            *pixel = pixel_color / samples_per_pixel as f64;
+            *pixel = pixel_color / samples_per_pixel as f32;
 
             progress.inc(1);
         });

@@ -8,7 +8,7 @@ use crate::vec3::Vec3;
 pub struct Color(Vec3);
 
 impl Color {
-    pub fn new(r: f64, g: f64, b: f64) -> Self {
+    pub fn new(r: f32, g: f32, b: f32) -> Self {
         Self(Vec3::new(r, g, b))
     }
 
@@ -16,7 +16,7 @@ impl Color {
         Self(Vec3::random())
     }
 
-    pub fn random_range(min: f64, max: f64) -> Self {
+    pub fn random_range(min: f32, max: f32) -> Self {
         Self(Vec3::random_range(min, max))
     }
 }
@@ -43,10 +43,10 @@ impl From<Vec3> for Color {
 }
 
 overload!((a: ?Color) + (b: ?Color) -> Color {Color(a.0 + b.0)});
-overload!((a: ?Color) / (b: f64) -> Color {Color(a.0 / b)});
+overload!((a: ?Color) / (b: f32) -> Color {Color(a.0 / b)});
 overload!((a: ?Color) * (b: ?Color) -> Color {Color(a.0 * b.0)});
-overload!((a: f64) * (b: ?Color) -> Color {Color(a * b.0)});
-overload!((a: ?Color) * (b: f64) -> Color {b * a});
+overload!((a: f32) * (b: ?Color) -> Color {Color(a * b.0)});
+overload!((a: ?Color) * (b: f32) -> Color {b * a});
 
 // Assignment operators
 overload!((a: &mut Color) += (b: ?Color) {a.0 += b.0});

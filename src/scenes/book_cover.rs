@@ -22,9 +22,9 @@ pub fn new(time: Time) -> impl Object {
         for b in -11..11 {
             let choose_mat: f32 = rand::random();
             let center = Point3::new(
-                a as f64 + 0.9 * rand::random::<f64>(),
+                a as f32 + 0.9 * rand::random::<f32>(),
                 0.2,
-                b as f64 + 0.9 * rand::random::<f64>(),
+                b as f32 + 0.9 * rand::random::<f32>(),
             );
 
             if (center - Point3::new(4.0, 0.2, 0.0)).length() > 0.9 {
@@ -32,12 +32,12 @@ pub fn new(time: Time) -> impl Object {
                     // diffuse
                     let albedo = Color::random() * Color::random();
                     let center2 =
-                        center + Point3::new(0.0, rand::random_range::<f64>(0., 0.2), 0.0);
+                        center + Point3::new(0.0, rand::random_range::<f32>(0., 0.2), 0.0);
                     Sphere::new_moving(center, center2, time, 0.2, Lambertian::new(albedo))
                 } else if choose_mat < 0.95 {
                     // metal
                     let albedo = Color::random_range(0.5, 1.0);
-                    let fuzz = 0.5 * rand::random::<f64>();
+                    let fuzz = 0.5 * rand::random::<f32>();
                     Sphere::new(center, 0.2, Metal::new(albedo, fuzz))
                 } else {
                     // glass

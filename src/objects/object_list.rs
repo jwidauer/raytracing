@@ -22,7 +22,7 @@ impl<'a> ObjectList<'a> {
 }
 
 impl Object for ObjectList<'_> {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
+    fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
         let mut hit_record = None;
         let mut closest_so_far = t_max;
 
@@ -43,14 +43,15 @@ impl Object for ObjectList<'_> {
 
         let mut output_box: Option<AABB> = None;
 
-        for object in &self.objects {
-            if let Some(tmp_box) = object.bounding_box(timeframe) {
-                output_box = match output_box {
-                    Some(output_box) => Some(AABB::surrounding_box(&output_box, &tmp_box)),
-                    None => Some(tmp_box),
-                };
-            } else {
-                return None;
+        for object in self.objects.iter() {
+            match object.bounding_box(timeframe) {
+                Some(tmp_box) => {
+                    output_box = match output_box {
+                        Some(output_box) => Some(AABB::surrounding_box(&output_box, &tmp_box)),
+                        None => Some(tmp_box),
+                    }
+                }
+                None => return None,
             }
         }
 

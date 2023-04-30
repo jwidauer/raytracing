@@ -52,11 +52,11 @@ impl<'a> Rectangle<'a> {
     }
 
     pub fn new_xy(
-        x0: f64,
-        x1: f64,
-        y0: f64,
-        y1: f64,
-        z: f64,
+        x0: f32,
+        x1: f32,
+        y0: f32,
+        y1: f32,
+        z: f32,
         material: impl Material + Send + Sync + 'a,
     ) -> Self {
         let p0 = Point3::new(x0, y0, z);
@@ -68,11 +68,11 @@ impl<'a> Rectangle<'a> {
     }
 
     pub fn new_xz(
-        x0: f64,
-        x1: f64,
-        z0: f64,
-        z1: f64,
-        y: f64,
+        x0: f32,
+        x1: f32,
+        z0: f32,
+        z1: f32,
+        y: f32,
         material: impl Material + Send + Sync + 'a,
     ) -> Self {
         let p0 = Point3::new(x0, y, z0);
@@ -84,11 +84,11 @@ impl<'a> Rectangle<'a> {
     }
 
     pub fn new_yz(
-        y0: f64,
-        y1: f64,
-        z0: f64,
-        z1: f64,
-        x: f64,
+        y0: f32,
+        y1: f32,
+        z0: f32,
+        z1: f32,
+        x: f32,
         material: impl Material + Send + Sync + 'a,
     ) -> Self {
         let p0 = Point3::new(x, y0, z0);
@@ -101,7 +101,7 @@ impl<'a> Rectangle<'a> {
 }
 
 impl Object for Rectangle<'_> {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord> {
+    fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
         self.triangle1
             .hit(ray, t_min, t_max)
             .or_else(|| self.triangle2.hit(ray, t_min, t_max))
@@ -112,5 +112,18 @@ impl Object for Rectangle<'_> {
             &self.triangle1.bounding_box(timeframe)?,
             &self.triangle2.bounding_box(timeframe)?,
         ))
+    }
+}
+
+impl Default for Rectangle<'_> {
+    fn default() -> Self {
+        Self::new(
+            Point3::new(0.0, 0.0, 0.0),
+            Point3::new(0.0, 0.0, 0.0),
+            Point3::new(0.0, 0.0, 0.0),
+            Point3::new(0.0, 0.0, 0.0),
+            crate::materials::Lambertian::new(crate::color::Color::new(0.5, 0.5, 0.5)),
+        )
+        .unwrap()
     }
 }

@@ -18,7 +18,7 @@ impl<'a> Checker<'a> {
 }
 
 impl Texture for Checker<'_> {
-    fn value(&self, u: f64, v: f64, point: &Vec3) -> Color {
+    fn value(&self, u: f32, v: f32, point: &Vec3) -> Color {
         let sines = (10.0 * point.x()).sin() * (10.0 * point.y()).sin() * (10.0 * point.z()).sin();
 
         if sines < 0.0 {

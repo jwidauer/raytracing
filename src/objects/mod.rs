@@ -1,12 +1,14 @@
 use dyn_clonable::*;
 
 mod bvh_node;
+mod cuboid;
 mod object_list;
 mod rectangle;
 mod sphere;
 mod triangle;
 
 pub use bvh_node::BvhNode;
+pub use cuboid::Cuboid;
 pub use object_list::ObjectList;
 pub use rectangle::Rectangle;
 pub use sphere::Sphere;
@@ -17,11 +19,11 @@ use crate::{aabb::AABB, materials::Material, ray::Ray, time::Time, vec3::Vec3};
 pub struct HitRecord<'a> {
     pub point: Vec3,
     pub normal: Vec3,
-    pub t: f64,
+    pub t: f32,
     pub front_face: bool,
     pub material: &'a dyn Material,
-    pub u: f64,
-    pub v: f64,
+    pub u: f32,
+    pub v: f32,
 }
 
 impl HitRecord<'_> {
@@ -42,7 +44,7 @@ impl HitRecord<'_> {
 
 #[clonable]
 pub trait Object: Clone {
-    fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord>;
+    fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord>;
     fn bounding_box(&self, timeframe: Time) -> Option<AABB>;
 }
 

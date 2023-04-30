@@ -14,7 +14,7 @@ use crate::{color::Color, vec3::Vec3};
 
 #[clonable]
 pub trait Texture: Clone {
-    fn value(&self, u: f64, v: f64, point: &Vec3) -> Color;
+    fn value(&self, u: f32, v: f32, point: &Vec3) -> Color;
 }
 
 pub type BoxedTexture<'a> = Box<dyn Texture + Send + Sync + 'a>;
