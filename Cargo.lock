@@ -830,6 +830,7 @@ dependencies = [
  "overload",
  "prettytable-rs",
  "rand",
+ "rand_chacha",
  "rayon",
  "thiserror",
 ]

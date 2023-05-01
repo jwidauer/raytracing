@@ -15,11 +15,12 @@ indicatif = "0.17.3"
 num_cpus = "1.15.0"
 overload = "0.1.1"
 prettytable-rs = "0.10.0"
-rand = "0.8.5"
+rand = { version = "0.8.5" }
+rand_chacha = { version = "0.3.1", features = ["simd"] }
 rayon = "1.7.0"
 thiserror = "1.0.40"
 
 [profile.release]
 debug = true
-codegen-units = 1
-lto = true
+# codegen-units = 1
+# lto = true
