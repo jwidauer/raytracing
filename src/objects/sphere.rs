@@ -6,11 +6,12 @@ use crate::{
     vec3::{Point3, Vec3},
 };
 
-use super::{HitRecord, Object};
+use super::{HitRecord, Object, Transformable};
 
 #[derive(Clone)]
 pub struct Sphere<'a> {
     movement: Ray,
+    rotation: Vec3,
     radius: f32,
     material: BoxedMaterial<'a>,
 }
@@ -23,6 +24,7 @@ impl<'a> Sphere<'a> {
     pub fn new_boxed(center: Point3, radius: f32, material: BoxedMaterial<'a>) -> Self {
         Self {
             movement: Ray::new(center, Vec3::zero()),
+            rotation: Vec3::new(0., 0., 0.),
             radius,
             material,
         }
@@ -51,18 +53,28 @@ impl<'a> Sphere<'a> {
         );
         Self {
             movement,
+            rotation: Vec3::new(0., 0., 0.),
             radius,
             material,
         }
     }
 
     // Compute the UV coordinates of a point on the surface of a unit sphere.
-    pub fn sphere_uv(p: &Vec3) -> (f32, f32) {
+    pub fn sphere_uv(&self, p: &Vec3) -> (f32, f32) {
         const PI: f32 = std::f32::consts::PI;
 
-        let theta = (-p.y()).acos();
+        // x = -cos(phi) * sin(theta)
+        // y = -cos(theta)
+        // z = sin(phi) * sin(theta)
+
+        let p = p.rotate(self.rotation, self.rotation.length());
+
         let phi = (-p.z()).atan2(p.x()) + PI;
-        (phi / (2.0 * PI), theta / PI)
+        let theta = (-p.y()).acos();
+
+        let u = phi / (2.0 * PI);
+        let v = theta / PI;
+        (u, v)
     }
 }
 
@@ -84,7 +96,7 @@ impl Object for Sphere<'_> {
             let p = ray.at(root);
             let normal = (p - self.movement.at(ray.time())) / self.radius;
             let (normal, front_face) = HitRecord::orient_towards_ray(ray, normal);
-            let (u, v) = Self::sphere_uv(&normal);
+            let (u, v) = self.sphere_uv(&normal);
             Some(HitRecord {
                 point: p,
                 normal,
@@ -114,5 +126,30 @@ impl Object for Sphere<'_> {
             self.movement.at(timeframe.start) - Vec3::new(self.radius, self.radius, self.radius),
             self.movement.at(timeframe.end) + Vec3::new(self.radius, self.radius, self.radius),
         ))
+    }
+}
+
+impl Transformable for Sphere<'_> {
+    fn translate(self, offset: Vec3) -> Self {
+        let movement = self.movement.translate(offset);
+        Self { movement, ..self }
+    }
+
+    fn rotate(self, axis: Vec3, angle: f32) -> Self {
+        let movement = self.movement.rotate(axis, angle);
+
+        // Rotate the sphere's UV coordinates to match the rotation of the sphere.
+        let rotation = self.rotation + axis * angle;
+
+        Self {
+            movement,
+            rotation,
+            ..self
+        }
+    }
+
+    fn scale(self, factor: f32) -> Self {
+        let radius = self.radius * factor;
+        Self { radius, ..self }
     }
 }

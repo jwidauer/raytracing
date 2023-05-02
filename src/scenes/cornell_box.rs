@@ -1,8 +1,8 @@
 use crate::{
     color::Color,
     materials::{DiffuseLight, Lambertian},
-    objects::{Cuboid, Object, ObjectList, Rectangle},
-    vec3::Point3,
+    objects::{Cuboid, Object, ObjectList, Rectangle, Transformable},
+    vec3::{Point3, Vec3},
 };
 
 pub fn new() -> impl Object {
@@ -54,17 +54,25 @@ pub fn new() -> impl Object {
         white.clone(),
     ));
 
-    objects.add(Cuboid::bounded_by(
-        Point3::new(130.0, 0.0, 65.0),
-        Point3::new(295.0, 165.0, 230.0),
+    let box1 = Cuboid::bounded_by(
+        Point3::new(0.0, 0.0, 0.0),
+        Point3::new(165.0, 330.0, 165.0),
         white.clone(),
-    ));
+    )
+    .rotate(Vec3::new(0., 1., 0.), -15f32.to_radians())
+    .translate(Vec3::new(265.0, 0.0, 295.0));
 
-    objects.add(Cuboid::bounded_by(
-        Point3::new(265.0, 0.0, 295.0),
-        Point3::new(430.0, 330.0, 460.0),
+    objects.add(box1);
+
+    let box2 = Cuboid::bounded_by(
+        Point3::new(0.0, 0.0, 0.0),
+        Point3::new(165.0, 165.0, 165.0),
         white.clone(),
-    ));
+    )
+    .rotate(Vec3::new(0., 1., 0.), 18f32.to_radians())
+    .translate(Vec3::new(130.0, 0.0, 65.0));
+
+    objects.add(box2);
 
     objects
 }

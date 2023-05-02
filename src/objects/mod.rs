@@ -31,7 +31,7 @@ impl HitRecord<'_> {
     /// This is necessary because we might be inside the object, in which case
     /// the normal vector would be pointing in the wrong direction.
     pub fn orient_towards_ray(ray: &Ray, outward_normal: Vec3) -> (Vec3, bool) {
-        let front_face = ray.direction().dot(&outward_normal) < 0.0;
+        let front_face = ray.direction().dot(outward_normal) < 0.0;
         let normal = if front_face {
             outward_normal
         } else {
@@ -49,3 +49,9 @@ pub trait Object: Clone {
 }
 
 pub type BoxedObject<'a> = Box<dyn Object + Send + Sync + 'a>;
+
+pub trait Transformable {
+    fn translate(self, offset: Vec3) -> Self;
+    fn rotate(self, axis: Vec3, angle: f32) -> Self;
+    fn scale(self, factor: f32) -> Self;
+}

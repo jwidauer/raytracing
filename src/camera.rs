@@ -31,8 +31,8 @@ impl Camera {
         let viewport_width = aspect_ratio * viewport_height;
 
         let w = view_ray.direction().normalized();
-        let u = view_up.cross(&w).normalized();
-        let v = w.cross(&u);
+        let u = view_up.cross(w).normalized();
+        let v = w.cross(u);
 
         let origin = *view_ray.origin();
         let horizontal = focus_dist * viewport_width * u;

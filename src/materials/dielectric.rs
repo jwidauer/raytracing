@@ -40,7 +40,7 @@ impl Material for Dielectric {
         };
 
         let unit_direction = ray.direction().normalized();
-        let cos_theta = (-unit_direction).dot(&rec.normal).min(1.0);
+        let cos_theta = (-unit_direction).dot(rec.normal).min(1.0);
         let sin_theta = (1.0 - cos_theta * cos_theta).sqrt();
 
         // Check for total internal reflection
@@ -48,9 +48,9 @@ impl Material for Dielectric {
         let reflactance_too_low = Self::reflectance(cos_theta, etai_over_etat) > rand::random();
 
         let direction = if cannot_refract || reflactance_too_low {
-            unit_direction.reflect(&rec.normal)
+            unit_direction.reflect(rec.normal)
         } else {
-            unit_direction.refract(&rec.normal, etai_over_etat)
+            unit_direction.refract(rec.normal, etai_over_etat)
         };
 
         let scattered = Ray::new_time_based(rec.point, direction, ray.time());

@@ -5,10 +5,10 @@ use crate::{
     materials::{BoxedMaterial, Material},
     ray::Ray,
     time::Time,
-    vec3::Point3,
+    vec3::{Point3, Vec3},
 };
 
-use super::{triangle::Triangle, HitRecord, Object};
+use super::{triangle::Triangle, HitRecord, Object, Transformable};
 
 #[derive(Error, Debug)]
 pub enum RectangleError {
@@ -30,7 +30,7 @@ impl<'a> Rectangle<'a> {
         p3: Point3,
         material: impl Material + 'a + Send + Sync,
     ) -> Result<Self, RectangleError> {
-        if !((p1 - p0).cross(&(p2 - p0)).normalized() - (p2 - p0).cross(&(p3 - p0)).normalized())
+        if !((p1 - p0).cross(p2 - p0).normalized() - (p2 - p0).cross(p3 - p0).normalized())
             .near_zero()
         {
             return Err(RectangleError::NotPlanar);
@@ -112,6 +112,29 @@ impl Object for Rectangle<'_> {
             &self.triangle1.bounding_box(timeframe)?,
             &self.triangle2.bounding_box(timeframe)?,
         ))
+    }
+}
+
+impl Transformable for Rectangle<'_> {
+    fn translate(self, offset: Point3) -> Self {
+        Self {
+            triangle1: self.triangle1.translate(offset),
+            triangle2: self.triangle2.translate(offset),
+        }
+    }
+
+    fn rotate(self, axis: Vec3, angle: f32) -> Self {
+        Self {
+            triangle1: self.triangle1.rotate(axis, angle),
+            triangle2: self.triangle2.rotate(axis, angle),
+        }
+    }
+
+    fn scale(self, factor: f32) -> Self {
+        Self {
+            triangle1: self.triangle1.scale(factor),
+            triangle2: self.triangle2.scale(factor),
+        }
     }
 }
 

@@ -43,11 +43,11 @@ impl Vec3 {
         self / self.length()
     }
 
-    pub fn dot(&self, v: &Vec3) -> f32 {
+    pub fn dot(&self, v: Vec3) -> f32 {
         self.e[0] * v.e[0] + self.e[1] * v.e[1] + self.e[2] * v.e[2]
     }
 
-    pub fn cross(&self, v: &Vec3) -> Vec3 {
+    pub fn cross(&self, v: Vec3) -> Vec3 {
         Vec3::new(
             self.e[1] * v.e[2] - self.e[2] * v.e[1],
             self.e[2] * v.e[0] - self.e[0] * v.e[2],
@@ -55,18 +55,18 @@ impl Vec3 {
         )
     }
 
-    pub fn reflect(&self, normal: &Vec3) -> Vec3 {
+    pub fn reflect(&self, normal: Vec3) -> Vec3 {
         self - 2.0 * self.dot(normal) * normal
     }
 
-    pub fn refract(&self, normal: &Vec3, etai_over_etat: f32) -> Vec3 {
+    pub fn refract(&self, normal: Vec3, etai_over_etat: f32) -> Vec3 {
         let cos_theta = (-self).dot(normal).min(1.0);
         let r_out_perp = etai_over_etat * (self + cos_theta * normal);
         let r_out_parallel = -(1.0 - r_out_perp.length_squared()).abs().sqrt() * normal;
         r_out_perp + r_out_parallel
     }
 
-    pub fn rotate(&self, axis: &Vec3, angle: f32) -> Vec3 {
+    pub fn rotate(&self, axis: Vec3, angle: f32) -> Vec3 {
         let cos_theta = angle.cos();
         let sin_theta = angle.sin();
 

@@ -1,7 +1,7 @@
 use crate::vec3::Vec3;
 
 #[allow(dead_code)]
-pub fn random_in_hemisphere(normal: &Vec3) -> Vec3 {
+pub fn random_in_hemisphere(normal: Vec3) -> Vec3 {
     let v = random_in_unit_sphere();
     if v.dot(normal) > 0.0 {
         v
@@ -41,5 +41,5 @@ pub fn random_lambertian(normal: &Vec3) -> Vec3 {
     let axis = Vec3::new(normal.y(), -normal.x(), 0.0);
     let angle = normal.z().acos();
 
-    v.rotate(&axis, angle)
+    v.rotate(axis, angle)
 }

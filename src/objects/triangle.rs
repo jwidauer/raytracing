@@ -1,6 +1,6 @@
 use crate::{aabb::AABB, materials::BoxedMaterial, ray::Ray, vec3::Vec3};
 
-use super::{HitRecord, Object};
+use super::{HitRecord, Object, Transformable};
 
 #[derive(Clone)]
 pub struct Triangle<'a> {
@@ -28,32 +28,32 @@ impl Object for Triangle<'_> {
         let e1 = self.v1 - self.v0;
         let e2 = self.v2 - self.v0;
 
-        let h = ray.direction().cross(&e2);
-        let a = e1.dot(&h);
+        let h = ray.direction().cross(e2);
+        let a = e1.dot(h);
         if a.abs() < 1e-8 {
             return None;
         }
 
         let f = 1.0 / a;
         let s = ray.origin() - self.v0;
-        let u = f * s.dot(&h);
+        let u = f * s.dot(h);
         if !(0.0..1.0).contains(&u) {
             return None;
         }
 
-        let q = s.cross(&e1);
-        let v = f * ray.direction().dot(&q);
+        let q = s.cross(e1);
+        let v = f * ray.direction().dot(q);
         if !(0.0..(1.0 - u)).contains(&v) {
             return None;
         }
 
-        let t = f * e2.dot(&q);
+        let t = f * e2.dot(q);
         if !(t_min..t_max).contains(&t) {
             return None;
         }
 
         let point = ray.at(t);
-        let normal = e1.cross(&e2).normalized();
+        let normal = e1.cross(e2).normalized();
         let (normal, front_face) = HitRecord::orient_towards_ray(ray, normal);
         Some(super::HitRecord {
             point,
@@ -83,5 +83,33 @@ impl Object for Triangle<'_> {
             max += Vec3::new(0.0001, 0.0001, 0.0001);
         }
         Some(AABB::new(min, max))
+    }
+}
+
+impl Transformable for Triangle<'_> {
+    fn translate(self, offset: Vec3) -> Self {
+        Self::new(
+            self.v0 + offset,
+            self.v1 + offset,
+            self.v2 + offset,
+            self.material,
+        )
+    }
+
+    fn rotate(self, axis: Vec3, angle: f32) -> Self {
+        let v0 = self.v0.rotate(axis, angle);
+        let v1 = self.v1.rotate(axis, angle);
+        let v2 = self.v2.rotate(axis, angle);
+
+        Self::new(v0, v1, v2, self.material)
+    }
+
+    fn scale(self, factor: f32) -> Self {
+        Self::new(
+            self.v0 * factor,
+            self.v1 * factor,
+            self.v2 * factor,
+            self.material,
+        )
     }
 }

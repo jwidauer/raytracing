@@ -78,7 +78,7 @@ impl Perlin {
                     accum += (i as f32 * uu + (1. - i as f32) * (1. - uu))
                         * (j as f32 * vv + (1. - j as f32) * (1. - vv))
                         * (k as f32 * ww + (1. - k as f32) * (1. - ww))
-                        * c.dot(&weight_v);
+                        * c.dot(weight_v);
                 }
             }
         }

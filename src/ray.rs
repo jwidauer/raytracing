@@ -24,8 +24,8 @@ impl Ray {
         &self.origin
     }
 
-    pub fn direction(&self) -> &Vec3 {
-        &self.direction
+    pub fn direction(&self) -> Vec3 {
+        self.direction
     }
 
     pub fn time(&self) -> f32 {
@@ -34,5 +34,15 @@ impl Ray {
 
     pub fn at(&self, t: f32) -> Point3 {
         self.origin + t * self.direction
+    }
+
+    pub fn translate(self, offset: Vec3) -> Self {
+        Self::new(self.origin + offset, self.direction)
+    }
+
+    pub fn rotate(self, axis: Vec3, angle: f32) -> Self {
+        let direction = self.direction.rotate(axis, angle);
+
+        Self::new(self.origin, direction)
     }
 }

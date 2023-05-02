@@ -1,6 +1,11 @@
-use crate::{materials::Material, ray::Ray, time::Time, vec3::Point3};
+use crate::{
+    materials::Material,
+    ray::Ray,
+    time::Time,
+    vec3::{Point3, Vec3},
+};
 
-use super::{HitRecord, Object, Rectangle};
+use super::{HitRecord, Object, Rectangle, Transformable};
 
 #[derive(Clone)]
 pub struct Cuboid<'a> {
@@ -102,5 +107,43 @@ impl Object for Cuboid<'_> {
         }
 
         Some(output_box)
+    }
+}
+
+impl Transformable for Cuboid<'_> {
+    fn translate(self, offset: Vec3) -> Self {
+        let faces = self
+            .faces
+            .into_iter()
+            .map(|face| face.translate(offset))
+            .collect::<Vec<_>>()
+            .try_into()
+            .unwrap_or_else(|v: Vec<_>| panic!("Expected 6 faces, got {}", v.len()));
+
+        Self { faces }
+    }
+
+    fn rotate(self, axis: Vec3, angle: f32) -> Self {
+        let faces = self
+            .faces
+            .into_iter()
+            .map(|face| face.rotate(axis, angle))
+            .collect::<Vec<_>>()
+            .try_into()
+            .unwrap_or_else(|v: Vec<_>| panic!("Expected 6 faces, got {}", v.len()));
+
+        Self { faces }
+    }
+
+    fn scale(self, factor: f32) -> Self {
+        let faces = self
+            .faces
+            .into_iter()
+            .map(|face| face.scale(factor))
+            .collect::<Vec<_>>()
+            .try_into()
+            .unwrap_or_else(|v: Vec<_>| panic!("Expected 6 faces, got {}", v.len()));
+
+        Self { faces }
     }
 }
