@@ -32,7 +32,7 @@ fn setup_scene(scene_type: SceneType, time: Time) -> (Scene<'static>, Camera, Im
     let mut aperture = 0.0;
     let mut background = Color::new(0.7, 0.8, 1.0);
     let mut aspect_ratio = 16.0 / 9.0;
-    let mut image_height = 720;
+    let image_height = 720;
 
     match scene_type {
         SceneType::BookCover => {
@@ -48,7 +48,13 @@ fn setup_scene(scene_type: SceneType, time: Time) -> (Scene<'static>, Camera, Im
             look_at = Point3::new(278.0, 278.0, 0.0);
             background = Color::new(0.0, 0.0, 0.0);
             vfov = 40.0;
-            image_height = 600;
+            aspect_ratio = 1.0;
+        }
+        SceneType::CornellSmoke => {
+            cam_pos = Point3::new(278.0, 278.0, -800.0);
+            look_at = Point3::new(278.0, 278.0, 0.0);
+            background = Color::new(0.0, 0.0, 0.0);
+            vfov = 40.0;
             aspect_ratio = 1.0;
         }
         _ => {}

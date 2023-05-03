@@ -123,10 +123,10 @@ impl Transformable for Rectangle<'_> {
         }
     }
 
-    fn rotate(self, axis: Vec3, angle: f32) -> Self {
+    fn rotate(self, axis: Vec3, angle_rad: f32) -> Self {
         Self {
-            triangle1: self.triangle1.rotate(axis, angle),
-            triangle2: self.triangle2.rotate(axis, angle),
+            triangle1: self.triangle1.rotate(axis, angle_rad),
+            triangle2: self.triangle2.rotate(axis, angle_rad),
         }
     }
 

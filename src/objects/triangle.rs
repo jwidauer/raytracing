@@ -96,10 +96,10 @@ impl Transformable for Triangle<'_> {
         )
     }
 
-    fn rotate(self, axis: Vec3, angle: f32) -> Self {
-        let v0 = self.v0.rotate(axis, angle);
-        let v1 = self.v1.rotate(axis, angle);
-        let v2 = self.v2.rotate(axis, angle);
+    fn rotate(self, axis: Vec3, angle_rad: f32) -> Self {
+        let v0 = self.v0.rotate(axis, angle_rad);
+        let v1 = self.v1.rotate(axis, angle_rad);
+        let v2 = self.v2.rotate(axis, angle_rad);
 
         Self::new(v0, v1, v2, self.material)
     }

@@ -66,9 +66,9 @@ impl Vec3 {
         r_out_perp + r_out_parallel
     }
 
-    pub fn rotate(&self, axis: Vec3, angle: f32) -> Vec3 {
-        let cos_theta = angle.cos();
-        let sin_theta = angle.sin();
+    pub fn rotate(&self, axis: Vec3, angle_rad: f32) -> Vec3 {
+        let cos_theta = angle_rad.cos();
+        let sin_theta = angle_rad.sin();
 
         cos_theta * self + sin_theta * self.cross(axis) + (1.0 - cos_theta) * axis * self.dot(axis)
     }
@@ -99,6 +99,30 @@ impl Vec3 {
             if p.length_squared() < 1.0 {
                 return p;
             }
+        }
+    }
+
+    pub fn random_in_unit_sphere() -> Vec3 {
+        Vec3::random_on_unit_sphere() * rand::random::<f32>().sqrt()
+    }
+
+    pub fn random_on_unit_sphere() -> Vec3 {
+        let (theta, phi): (f32, f32) = rand::random();
+
+        Vec3::new(
+            theta.sin() * phi.cos(),
+            theta.sin() * phi.sin(),
+            theta.cos(),
+        )
+    }
+
+    #[allow(dead_code)]
+    pub fn random_in_hemisphere(normal: Vec3) -> Vec3 {
+        let v = Vec3::random_in_unit_sphere();
+        if v.dot(normal) > 0.0 {
+            v
+        } else {
+            -v
         }
     }
 }

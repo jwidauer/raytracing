@@ -1,6 +1,7 @@
 mod dielectric;
 mod diffuse_light;
 mod diffusers;
+mod isotropic;
 mod lambertian;
 mod metal;
 
@@ -8,6 +9,7 @@ use dyn_clonable::clonable;
 
 pub use dielectric::Dielectric;
 pub use diffuse_light::DiffuseLight;
+pub use isotropic::Isotropic;
 pub use lambertian::Lambertian;
 pub use metal::Metal;
 

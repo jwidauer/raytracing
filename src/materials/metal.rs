@@ -1,6 +1,6 @@
-use crate::{color::Color, objects::HitRecord, ray::Ray};
+use crate::{color::Color, objects::HitRecord, ray::Ray, vec3::Vec3};
 
-use super::{diffusers, Material, ScatterRecord};
+use super::{Material, ScatterRecord};
 
 #[derive(Debug, Clone)]
 pub struct Metal {
@@ -17,7 +17,7 @@ impl Metal {
 impl Material for Metal {
     fn scatter(&self, ray: &Ray, hit_record: &HitRecord) -> Option<ScatterRecord> {
         let reflected = ray.direction().reflect(hit_record.normal)
-            + self.fuzziness * diffusers::random_in_unit_sphere();
+            + self.fuzziness * Vec3::random_in_unit_sphere();
         let scattered = Ray::new_time_based(hit_record.point, reflected, ray.time());
 
         if scattered.direction().dot(hit_record.normal) > 0.0 {

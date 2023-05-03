@@ -1,5 +1,6 @@
 mod book_cover;
 mod cornell_box;
+mod cornell_smoke;
 mod globe;
 mod perlin_spheres;
 mod simple_light;
@@ -24,6 +25,7 @@ pub enum SceneType {
     Globe,
     SimpleLight,
     CornellBox,
+    CornellSmoke,
 }
 
 impl Scene<'_> {
@@ -36,6 +38,7 @@ impl Scene<'_> {
             SceneType::Globe => Box::new(globe::new()),
             SceneType::SimpleLight => Box::new(simple_light::new()),
             SceneType::CornellBox => Box::new(cornell_box::new()),
+            SceneType::CornellSmoke => Box::new(cornell_smoke::new()),
         };
 
         Self {

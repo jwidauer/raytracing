@@ -1,29 +1,5 @@
 use crate::vec3::Vec3;
 
-#[allow(dead_code)]
-pub fn random_in_hemisphere(normal: Vec3) -> Vec3 {
-    let v = random_in_unit_sphere();
-    if v.dot(normal) > 0.0 {
-        v
-    } else {
-        -v
-    }
-}
-
-pub fn random_in_unit_sphere() -> Vec3 {
-    random_on_unit_sphere() * rand::random::<f32>().sqrt()
-}
-
-pub fn random_on_unit_sphere() -> Vec3 {
-    let (theta, phi): (f32, f32) = rand::random();
-
-    Vec3::new(
-        theta.sin() * phi.cos(),
-        theta.sin() * phi.sin(),
-        theta.cos(),
-    )
-}
-
 pub fn random_lambertian(normal: &Vec3) -> Vec3 {
     let (r1, r2): (f32, f32) = rand::random();
     let sin_theta = r1.sqrt();

@@ -123,11 +123,11 @@ impl Transformable for Cuboid<'_> {
         Self { faces }
     }
 
-    fn rotate(self, axis: Vec3, angle: f32) -> Self {
+    fn rotate(self, axis: Vec3, angle_rad: f32) -> Self {
         let faces = self
             .faces
             .into_iter()
-            .map(|face| face.rotate(axis, angle))
+            .map(|face| face.rotate(axis, angle_rad))
             .collect::<Vec<_>>()
             .try_into()
             .unwrap_or_else(|v: Vec<_>| panic!("Expected 6 faces, got {}", v.len()));

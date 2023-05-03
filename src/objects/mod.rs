@@ -1,6 +1,7 @@
 use dyn_clonable::*;
 
 mod bvh_node;
+mod constant_medium;
 mod cuboid;
 mod object_list;
 mod rectangle;
@@ -8,6 +9,7 @@ mod sphere;
 mod triangle;
 
 pub use bvh_node::BvhNode;
+pub use constant_medium::ConstantMedium;
 pub use cuboid::Cuboid;
 pub use object_list::ObjectList;
 pub use rectangle::Rectangle;
@@ -52,6 +54,6 @@ pub type BoxedObject<'a> = Box<dyn Object + Send + Sync + 'a>;
 
 pub trait Transformable {
     fn translate(self, offset: Vec3) -> Self;
-    fn rotate(self, axis: Vec3, angle: f32) -> Self;
+    fn rotate(self, axis: Vec3, angle_rad: f32) -> Self;
     fn scale(self, factor: f32) -> Self;
 }
