@@ -37,6 +37,7 @@ impl<'a> ConstantMedium<'a> {
         }
     }
 
+    #[allow(dead_code)]
     pub fn from_texture(
         boundary: impl Object + 'a + Sync + Send,
         texture: impl Texture + 'a + Sync + Send,

@@ -11,6 +11,7 @@ pub struct DiffuseLight<'a> {
 }
 
 impl<'a> DiffuseLight<'a> {
+    #[allow(dead_code)]
     pub fn from_texture(emit: impl Texture + Send + Sync + 'a) -> Self {
         Self {
             emit: Box::new(emit),
