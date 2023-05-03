@@ -2,14 +2,14 @@ use crate::{
     color::Color,
     materials::{Dielectric, DiffuseLight, Lambertian},
     objects::{Object, ObjectList, Rectangle, Sphere},
-    textures::{ImageTexture, Noise},
+    textures::{ImageTexture, NoiseTexture},
     vec3::Point3,
 };
 
 pub fn new() -> impl Object {
     let mut objects = ObjectList::new(vec![]);
 
-    let perlin_texture = Noise::new(4.);
+    let perlin_texture = NoiseTexture::new(4.);
     objects.add(Sphere::new(
         Point3::new(0.0, -1000.0, 0.0),
         1000.0,

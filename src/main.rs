@@ -57,6 +57,13 @@ fn setup_scene(scene_type: SceneType, time: Time) -> (Scene<'static>, Camera, Im
             vfov = 40.0;
             aspect_ratio = 1.0;
         }
+        SceneType::FinalScene => {
+            cam_pos = Point3::new(478.0, 278.0, -600.0);
+            look_at = Point3::new(278.0, 278.0, 0.0);
+            background = Color::new(0.0, 0.0, 0.0);
+            vfov = 40.0;
+            aspect_ratio = 1.0;
+        }
         _ => {}
     }
 
@@ -109,7 +116,7 @@ struct Cli {
 fn main() -> Result<()> {
     let args = Cli::parse();
 
-    let samples_per_pixel = 400;
+    let samples_per_pixel = 10000;
     let max_depth = 50;
 
     let timeframe = Time::from_exposure(1.0);

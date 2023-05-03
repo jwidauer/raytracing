@@ -5,7 +5,7 @@ mod solid_color;
 
 pub use checker::Checker;
 pub use image_texture::ImageTexture;
-pub use noise::Noise;
+pub use noise::NoiseTexture;
 pub use solid_color::SolidColor;
 
 use dyn_clonable::clonable;

@@ -3,12 +3,12 @@ use crate::{color::Color, perlin::Perlin};
 use super::Texture;
 
 #[derive(Clone)]
-pub struct Noise {
+pub struct NoiseTexture {
     noise: Perlin,
     scale: f32,
 }
 
-impl Noise {
+impl NoiseTexture {
     pub fn new(scale: f32) -> Self {
         Self {
             noise: Perlin::new(),
@@ -17,7 +17,7 @@ impl Noise {
     }
 }
 
-impl Texture for Noise {
+impl Texture for NoiseTexture {
     fn value(&self, _u: f32, _v: f32, point: &crate::vec3::Vec3) -> crate::color::Color {
         Color::new(1., 1., 1.)
             * 0.5
