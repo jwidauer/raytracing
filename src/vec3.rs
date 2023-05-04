@@ -19,34 +19,42 @@ impl Vec3 {
         Vec3::new(0., 0., 0.)
     }
 
+    #[inline]
     pub fn x(&self) -> f32 {
         self.e[0]
     }
 
+    #[inline]
     pub fn y(&self) -> f32 {
         self.e[1]
     }
 
+    #[inline]
     pub fn z(&self) -> f32 {
         self.e[2]
     }
 
+    #[inline]
     pub fn length(&self) -> f32 {
         self.length_squared().sqrt()
     }
 
+    #[inline]
     pub fn length_squared(&self) -> f32 {
         self.e[0] * self.e[0] + self.e[1] * self.e[1] + self.e[2] * self.e[2]
     }
 
+    #[inline]
     pub fn normalized(&self) -> Self {
         self / self.length()
     }
 
+    #[inline]
     pub fn dot(&self, v: Vec3) -> f32 {
         self.e[0] * v.e[0] + self.e[1] * v.e[1] + self.e[2] * v.e[2]
     }
 
+    #[inline]
     pub fn cross(&self, v: Vec3) -> Vec3 {
         Vec3::new(
             self.e[1] * v.e[2] - self.e[2] * v.e[1],
@@ -55,6 +63,7 @@ impl Vec3 {
         )
     }
 
+    #[inline]
     pub fn reflect(&self, normal: Vec3) -> Vec3 {
         self - 2.0 * self.dot(normal) * normal
     }
@@ -66,6 +75,7 @@ impl Vec3 {
         r_out_perp + r_out_parallel
     }
 
+    #[inline]
     pub fn rotate(&self, axis: Vec3, angle_rad: f32) -> Vec3 {
         let cos_theta = angle_rad.cos();
         let sin_theta = angle_rad.sin();
@@ -73,6 +83,7 @@ impl Vec3 {
         cos_theta * self + sin_theta * self.cross(axis) + (1.0 - cos_theta) * axis * self.dot(axis)
     }
 
+    #[inline]
     pub fn near_zero(&self) -> bool {
         let epsilon = 1e-8;
         self.e[0].abs() < epsilon && self.e[1].abs() < epsilon && self.e[2].abs() < epsilon
