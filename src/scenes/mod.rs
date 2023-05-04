@@ -41,7 +41,7 @@ impl Scene<'_> {
             SceneType::SimpleLight => Box::new(simple_light::new()),
             SceneType::CornellBox => Box::new(cornell_box::new()),
             SceneType::CornellSmoke => Box::new(cornell_smoke::new()),
-            SceneType::FinalScene => Box::new(final_scene::new()),
+            SceneType::FinalScene => Box::new(final_scene::new(time)),
         };
 
         Self {

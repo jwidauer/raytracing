@@ -10,9 +10,7 @@ use crate::{
     vec3::{Point3, Vec3},
 };
 
-pub fn new() -> impl Object {
-    let timeframe = Time::new(0.0, 1.0);
-
+pub fn new(timeframe: Time) -> impl Object {
     let mut boxes = ObjectList::new(vec![]);
 
     let ground = Lambertian::new(Color::new(0.48, 0.83, 0.53));
@@ -42,11 +40,11 @@ pub fn new() -> impl Object {
 
     objects.add(BvhNode::from_list(&boxes, timeframe));
 
-    let light = DiffuseLight::from_color(Color::new(7.0, 7.0, 7.0));
+    let light = DiffuseLight::from_color(Color::new(7., 7., 7.));
     objects.add(Rectangle::new_xz(123., 423., 147., 412., 554., light));
 
-    let center1 = Point3::new(400.0, 400.0, 200.0);
-    let center2 = center1 + Vec3::new(30.0, 0.0, 0.0);
+    let center1 = Point3::new(400., 400., 200.);
+    let center2 = center1 + Vec3::new(30., 0., 0.);
     let material = Lambertian::new(Color::new(0.7, 0.3, 0.1));
     let moving_sphere = Sphere::new_moving(center1, center2, timeframe, 50., material);
     objects.add(moving_sphere);
@@ -87,11 +85,12 @@ pub fn new() -> impl Object {
 
     let mut boxes = ObjectList::new(vec![]);
     let white = Lambertian::new(Color::new(0.73, 0.73, 0.73));
+    let translation = Vec3::new(-100., 270., 395.);
     let ns = 1000;
     for _ in 0..ns {
         let (x, y, z) = rng.gen::<(f32, f32, f32)>();
         boxes.add(Sphere::new(
-            Point3::new(x * 165.0, y * 165.0, z * 165.),
+            Point3::new(x * 165.0, y * 165.0, z * 165.) + translation,
             10.0,
             white.clone(),
         ));
@@ -99,5 +98,5 @@ pub fn new() -> impl Object {
 
     objects.add(BvhNode::from_list(&boxes, timeframe));
 
-    boxes
+    objects
 }

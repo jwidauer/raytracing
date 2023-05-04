@@ -22,7 +22,7 @@ mod ray;
 mod scenes;
 mod textures;
 mod time;
-mod vec3;
+pub mod vec3;
 
 fn setup_scene(scene_type: SceneType, time: Time) -> (Scene<'static>, Camera, Image) {
     // Camera
@@ -116,7 +116,7 @@ struct Cli {
 fn main() -> Result<()> {
     let args = Cli::parse();
 
-    let samples_per_pixel = 10000;
+    let samples_per_pixel = 500;
     let max_depth = 50;
 
     let timeframe = Time::from_exposure(1.0);
