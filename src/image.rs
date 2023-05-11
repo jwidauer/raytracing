@@ -2,7 +2,9 @@ use std::io::Write;
 use std::{fs::File, io::BufWriter};
 
 use crate::color::Color;
+use crate::settings::ImageSettings;
 
+#[derive(Debug, Clone)]
 pub struct Image {
     pub width: usize,
     pub height: usize,
@@ -16,6 +18,10 @@ impl Image {
             height,
             pixels: vec![Color::new(0., 0., 0.); width * height],
         }
+    }
+
+    pub fn from_settings(settings: ImageSettings) -> Self {
+        Self::new(settings.image_width, settings.image_height)
     }
 
     pub fn write_ppm(&self, filename: &str) -> Result<(), std::io::Error> {

@@ -3,11 +3,10 @@ use crate::{
     materials::Lambertian,
     objects::{Object, ObjectList, Sphere},
     textures::Checker,
-    time::Time,
     vec3::Point3,
 };
 
-pub fn new(_timeframe: Time) -> impl Object {
+pub fn new() -> impl Object {
     let mut world = ObjectList::new(vec![]);
 
     let checker = Checker::from_colors(Color::new(0.2, 0.3, 0.1), Color::new(0.9, 0.9, 0.9));

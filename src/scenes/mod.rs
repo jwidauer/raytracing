@@ -10,7 +10,7 @@ mod two_spheres;
 
 use clap::ValueEnum;
 
-use crate::{color::Color, objects::BoxedObject, ray::Ray, time::Time};
+use crate::{color::Color, objects::BoxedObject, ray::Ray, settings::SceneSettings, time::Time};
 
 pub struct Scene<'a> {
     objects: BoxedObject<'a>,
@@ -31,9 +31,13 @@ pub enum SceneType {
 }
 
 impl Scene<'_> {
+    pub fn from_settings(settings: SceneSettings) -> Self {
+        Self::new(settings.scene_type, settings.time, settings.background)
+    }
+
     pub fn new(scene_type: SceneType, time: Time, background: Color) -> Self {
         let objects: BoxedObject = match scene_type {
-            SceneType::TwoSpheres => Box::new(two_spheres::new(time)),
+            SceneType::TwoSpheres => Box::new(two_spheres::new()),
             SceneType::ThreeSpheres => Box::new(three_spheres::new(time)),
             SceneType::BookCover => Box::new(book_cover::new(time)),
             SceneType::PerlinSpheres => Box::new(perlin_spheres::new()),

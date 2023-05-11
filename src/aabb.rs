@@ -1,5 +1,6 @@
 use crate::{ray::Ray, vec3::Point3};
 
+#[allow(clippy::upper_case_acronyms)]
 #[derive(Debug, Clone, Copy)]
 pub struct AABB {
     min: Point3,

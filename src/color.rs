@@ -12,6 +12,18 @@ impl Color {
         Self(Vec3::new(r, g, b))
     }
 
+    pub fn r(&self) -> f32 {
+        self.0[0]
+    }
+
+    pub fn g(&self) -> f32 {
+        self.0[1]
+    }
+
+    pub fn b(&self) -> f32 {
+        self.0[2]
+    }
+
     pub fn random() -> Self {
         Self(Vec3::random())
     }

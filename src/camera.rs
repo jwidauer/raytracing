@@ -1,4 +1,5 @@
 use crate::rand_ext::rand;
+use crate::settings::CameraSettings;
 use crate::time::Time;
 use crate::{ray::Ray, vec3::Vec3};
 
@@ -51,6 +52,19 @@ impl Camera {
             v,
             time,
         }
+    }
+
+    pub fn from_settings(settings: CameraSettings) -> Camera {
+        let view_ray = Ray::new(settings.cam_pos, settings.cam_pos - settings.look_at);
+        Self::new(
+            view_ray,
+            settings.vup,
+            settings.vfov,
+            settings.aspect_ratio,
+            settings.aperture,
+            settings.focus_dist,
+            settings.time,
+        )
     }
 
     pub fn get_ray(&self, s: f32, t: f32) -> Ray {
